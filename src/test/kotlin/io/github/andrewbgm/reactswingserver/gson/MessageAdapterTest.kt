@@ -8,7 +8,7 @@ import kotlin.test.expect
 
 class MessageAdapterTest {
   private data class MessageAdapterTestMessage(
-    @Expose val value: String,
+    @Expose val value: Map<String, Any?>,
   ) : IMessage
 
   private val gson = GsonBuilder()
@@ -18,18 +18,19 @@ class MessageAdapterTest {
     ))
     .create()
 
-  private val json = """{"type":"MESSAGE_ADAPTER_TEST","payload":{"value":"test"}}"""
+  private val json = """{"type":"MESSAGE_ADAPTER_TEST","payload":{"value":{"key":"test"}}}"""
 
   @Test
   fun fromJson() {
     val result = gson.fromJson<MessageAdapterTestMessage>(json, IMessage::class.java)
     expect(MessageAdapterTestMessage::class) { result::class }
-    expect("test") { result.value }
+    expect("test") { result.value["key"] }
   }
 
   @Test
   fun toJson() {
-    val result = gson.toJson(MessageAdapterTestMessage("test"), IMessage::class.java)
+    val result =
+      gson.toJson(MessageAdapterTestMessage(mapOf("key" to "test")), IMessage::class.java)
     expect(json) { result }
   }
 }
