@@ -35,6 +35,17 @@ dependencies {
 
 
 publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/andrewbgm/react-swing-server")
+      credentials {
+        username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+      }
+    }
+  }
+
   publications {
     create<MavenPublication>("mavenJava") {
       artifactId = "react-swing-server"
