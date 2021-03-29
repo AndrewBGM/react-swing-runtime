@@ -12,6 +12,7 @@ import javax.swing.JMenuBar
 
 class ReactSwingServer {
   private val app: Javalin by lazy { configureApp() }
+  private val topLevelFrames: MutableList<JFrame> = mutableListOf()
   private val componentsById: MutableMap<Int, Container?> = mutableMapOf()
 
   fun start(
@@ -30,6 +31,7 @@ class ReactSwingServer {
   ) {
     val parentComponent = componentsById[parentId] ?: error("No component #$parentId.")
     val childComponent = componentsById[childId] ?: error("No component #$childId.")
+
     if (parentComponent is JFrame) {
       if (childComponent is JMenuBar) {
         parentComponent.jMenuBar = childComponent
@@ -47,9 +49,10 @@ class ReactSwingServer {
   ) {
     val childComponent = componentsById[childId] ?: error("No component #$childId.")
 
-    assert(containerId == 0) { "Container should always be 0."}
+    assert(containerId == 0) { "Container should always be 0." }
     assert(childComponent is JFrame) { "Top level component #$childId must be JFrame." }
 
+    topLevelFrames.add(childComponent as JFrame)
   }
 
   private fun appendInitialChild(
@@ -62,15 +65,19 @@ class ReactSwingServer {
   private fun clearContainer(
     containerId: Int,
   ) {
-    TODO("Not yet implemented")
+    assert(containerId == 0) { "Container should always be 0." }
+
+    topLevelFrames.forEach { it.dispose() }
+    topLevelFrames.clear()
   }
 
   private fun commitUpdate(
     instanceId: Int,
     prevProps: Map<String, Any?>,
-    prevProps1: Map<String, Any?>,
+    nextProps: Map<String, Any?>,
   ) {
-    TODO("Not yet implemented")
+    val component = componentsById[instanceId] ?: error("No component #$instanceId.")
+    updateComponent(component, prevProps, nextProps)
   }
 
   private fun createInstance(
@@ -78,7 +85,8 @@ class ReactSwingServer {
     type: String,
     props: Map<String, Any?>,
   ) {
-    TODO("Not yet implemented")
+    val component = createComponent(type, props)
+    componentsById[instanceId] = component
   }
 
   private fun hideInstance(
@@ -92,7 +100,16 @@ class ReactSwingServer {
     childId: Int,
     beforeChildId: Int,
   ) {
-    TODO("Not yet implemented")
+    val parentComponent = componentsById[parentId] ?: error("No component #$parentId.")
+    val childComponent = componentsById[childId] ?: error("No component #$childId.")
+    val beforeChildComponent = componentsById[childId] ?: error("No component #$beforeChildId.")
+
+    val idx = parentComponent.components.indexOf(beforeChildComponent)
+    if (parentComponent.components.contains(childComponent)) {
+      parentComponent.remove(childComponent)
+    }
+
+    parentComponent.add(childComponent, idx)
   }
 
   private fun insertInContainerBefore(
@@ -100,21 +117,37 @@ class ReactSwingServer {
     childId: Int,
     beforeChildId: Int,
   ) {
-    TODO("Not yet implemented")
+    val childComponent = componentsById[childId] ?: error("No component #$childId.")
+    val beforeChildComponent = componentsById[childId] ?: error("No component #$beforeChildId.")
+
+    assert(containerId == 0) { "Container should always be 0." }
+    assert(childComponent is JFrame) { "Top level component #$childId must be JFrame." }
+    assert(beforeChildComponent is JFrame) { "Top level component #$beforeChildId must be JFrame." }
+
+    // This is probably unnecessary, but nice to keep the order at least.
+    val idx = topLevelFrames.indexOf(beforeChildComponent as JFrame)
+    topLevelFrames.add(idx, childComponent as JFrame)
   }
 
   private fun invokeCallback(
     callbackId: Int,
     args: List<Any?>,
   ) {
-
+    TODO("Not yet implemented")
   }
 
   private fun removeChildFromContainer(
     containerId: Int,
     childId: Int,
   ) {
-    TODO("Not yet implemented")
+    val childComponent = componentsById[childId] ?: error("No component #$childId.")
+
+    assert(containerId == 0) { "Container should always be 0." }
+    assert(childComponent is JFrame) { "Top level component #$childId must be JFrame." }
+
+    childComponent as JFrame
+    childComponent.dispose()
+    topLevelFrames.remove(childComponent)
   }
 
   private fun removeChild(
@@ -138,6 +171,21 @@ class ReactSwingServer {
   private fun unhideInstance(
     instanceId: Int,
     props: Map<String, Any?>,
+  ) {
+    TODO("Not yet implemented")
+  }
+
+  private fun createComponent(
+    type: String,
+    props: Map<String, Any?>,
+  ): Container {
+    TODO("Not yet implemented")
+  }
+
+  private fun updateComponent(
+    component: Container,
+    prevProps: Map<String, Any?>,
+    nextProps: Map<String, Any?>,
   ) {
     TODO("Not yet implemented")
   }
