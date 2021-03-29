@@ -7,7 +7,7 @@ import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
-import io.github.andrewbgm.reactswingserver.messages.*
+import io.github.andrewbgm.reactswingserver.network.messages.*
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 

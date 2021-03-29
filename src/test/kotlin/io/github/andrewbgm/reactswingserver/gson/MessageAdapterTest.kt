@@ -2,7 +2,7 @@ package io.github.andrewbgm.reactswingserver.gson
 
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
-import io.github.andrewbgm.reactswingserver.messages.*
+import io.github.andrewbgm.reactswingserver.network.messages.*
 import kotlin.test.Test
 import kotlin.test.expect
 
