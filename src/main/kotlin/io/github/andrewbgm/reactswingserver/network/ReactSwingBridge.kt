@@ -1,32 +1,15 @@
 package io.github.andrewbgm.reactswingserver.network
 
 import io.github.andrewbgm.reactswingserver.network.messages.*
-import io.javalin.websocket.WsCloseContext
-import io.javalin.websocket.WsCloseHandler
-import io.javalin.websocket.WsConnectContext
-import io.javalin.websocket.WsConnectHandler
-import io.javalin.websocket.WsErrorContext
-import io.javalin.websocket.WsErrorHandler
+import io.javalin.websocket.WsHandler
 import io.javalin.websocket.WsMessageContext
 import io.javalin.websocket.WsMessageHandler
 
-class ReactSwingBridge : WsCloseHandler, WsConnectHandler, WsErrorHandler, WsMessageHandler {
-  override fun handleClose(
-    ctx: WsCloseContext,
+class ReactSwingBridge : WsMessageHandler {
+  fun attach(
+    ws: WsHandler,
   ) {
-
-  }
-
-  override fun handleConnect(
-    ctx: WsConnectContext,
-  ) {
-
-  }
-
-  override fun handleError(
-    ctx: WsErrorContext,
-  ) {
-
+    ws.onMessage(this)
   }
 
   override fun handleMessage(

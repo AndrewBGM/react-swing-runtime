@@ -28,12 +28,7 @@ class ReactSwingServer {
 
     return Javalin
       .create()
-      .ws("/ws") { ws ->
-        ws.onClose(bridge)
-        ws.onConnect(bridge)
-        ws.onError(bridge)
-        ws.onMessage(bridge)
-      }
+      .ws("/ws") { ws -> bridge.attach(ws) }
   }
 
   private fun configureGsonMappers() {
