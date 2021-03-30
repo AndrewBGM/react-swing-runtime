@@ -4,8 +4,11 @@ import io.github.andrewbgm.reactswingserver.network.messages.*
 import io.javalin.websocket.WsHandler
 import io.javalin.websocket.WsMessageContext
 import io.javalin.websocket.WsMessageHandler
+import org.slf4j.LoggerFactory
 
 class ReactSwingBridge : WsMessageHandler {
+  private val logger = LoggerFactory.getLogger(ReactSwingBridge::class.java)
+
   fun attach(
     ws: WsHandler,
   ) {
@@ -44,27 +47,27 @@ class ReactSwingBridge : WsMessageHandler {
     parentId: Int,
     childId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("appendChild($parentId, $childId)")
   }
 
   private fun appendChildToContainer(
     containerId: Int,
     childId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("appendChildToContainer($containerId, $childId)")
   }
 
   private fun appendInitialChild(
     parentId: Int,
     childId: Int,
   ) {
-    appendChild(parentId, childId)
+    logger.info("appendInitialChild($parentId, $childId)")
   }
 
   private fun clearContainer(
     containerId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("clearContainer($containerId)")
   }
 
   private fun commitUpdate(
@@ -72,7 +75,7 @@ class ReactSwingBridge : WsMessageHandler {
     prevProps: Map<String, Any?>,
     nextProps: Map<String, Any?>,
   ) {
-    TODO("Not yet implemented")
+    logger.info("commitUpdate($instanceId, $prevProps, $nextProps)")
   }
 
   private fun createInstance(
@@ -80,13 +83,13 @@ class ReactSwingBridge : WsMessageHandler {
     type: String,
     props: Map<String, Any?>,
   ) {
-    TODO("Not yet implemented")
+    logger.info("createInstance($instanceId, $type, $props)")
   }
 
   private fun hideInstance(
     instanceId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("hideInstance($instanceId)")
   }
 
   private fun insertBefore(
@@ -94,7 +97,7 @@ class ReactSwingBridge : WsMessageHandler {
     childId: Int,
     beforeChildId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("insertBefore($parentId, $childId, $beforeChildId)")
   }
 
   private fun insertInContainerBefore(
@@ -102,34 +105,34 @@ class ReactSwingBridge : WsMessageHandler {
     childId: Int,
     beforeChildId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("insertInContainerBefore($containerId, $childId, $beforeChildId)")
   }
 
   private fun invokeCallback(
     callbackId: Int,
     args: List<Any?>,
   ) {
-    TODO("Not yet implemented")
+    logger.info("invokeCallback($callbackId, $args)")
   }
 
   private fun removeChildFromContainer(
     containerId: Int,
     childId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("removeChildFromContainer($containerId, $childId)")
   }
 
   private fun removeChild(
     parentId: Int,
     childId: Int,
   ) {
-    TODO("Not yet implemented")
+    logger.info("removeChild($parentId, $childId)")
   }
 
   private fun unhideInstance(
     instanceId: Int,
     props: Map<String, Any?>,
   ) {
-    TODO("Not yet implemented")
+    logger.info("unhideInstance($instanceId, $props)")
   }
 }
