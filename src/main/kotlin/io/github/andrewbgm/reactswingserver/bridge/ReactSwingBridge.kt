@@ -1,17 +1,27 @@
 package io.github.andrewbgm.reactswingserver.bridge
 
+import io.javalin.websocket.WsConnectContext
+import io.javalin.websocket.WsConnectHandler
+import io.javalin.websocket.WsContext
 import io.javalin.websocket.WsHandler
 import io.javalin.websocket.WsMessageContext
 import io.javalin.websocket.WsMessageHandler
 import org.slf4j.LoggerFactory
 
-class ReactSwingBridge : WsMessageHandler {
+class ReactSwingBridge : WsConnectHandler, WsMessageHandler {
   private val logger = LoggerFactory.getLogger(ReactSwingBridge::class.java)
+  private lateinit var ws: WsContext
 
   fun attach(
     ws: WsHandler,
   ) {
     ws.onMessage(this)
+  }
+
+  override fun handleConnect(
+    ctx: WsConnectContext
+  ) {
+    ws = ctx
   }
 
   override fun handleMessage(
