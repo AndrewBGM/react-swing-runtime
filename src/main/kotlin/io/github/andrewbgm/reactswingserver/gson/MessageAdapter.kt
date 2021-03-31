@@ -14,8 +14,10 @@ import kotlin.reflect.KClass
 class MessageAdapter(
   vararg messages: KClass<out IMessage>,
 ) : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
-  private val mappedNamesByType: MutableMap<KClass<out IMessage>, String> = mutableMapOf()
-  private val mappedTypesByName: MutableMap<String, KClass<out IMessage>> = mutableMapOf()
+  private val mappedNamesByType: MutableMap<KClass<out IMessage>, String> =
+    mutableMapOf()
+  private val mappedTypesByName: MutableMap<String, KClass<out IMessage>> =
+    mutableMapOf()
 
   init {
     messages.forEach { registerMessageType(it) }
@@ -33,7 +35,8 @@ class MessageAdapter(
     val obj = json.asJsonObject
     val type = obj.get("type").asString
     val payload = obj.get("payload").asJsonObject
-    val mappedType = mappedTypesByName[type] ?: error("No mapping exists for $type")
+    val mappedType =
+      mappedTypesByName[type] ?: error("No mapping exists for $type")
 
     return ctx.deserialize(payload, mappedType.java)
   }
@@ -47,7 +50,8 @@ class MessageAdapter(
       return JsonNull.INSTANCE
     }
 
-    val mappedName = mappedNamesByType[src::class] ?: error("No mapping exists for ${src::class}")
+    val mappedName = mappedNamesByType[src::class]
+      ?: error("No mapping exists for ${src::class}")
     val obj = JsonObject()
     obj.addProperty("type", mappedName)
     obj.add("payload", ctx.serialize(src))

@@ -22,23 +22,45 @@ class ReactSwingBridge : WsMessageHandler {
       is AppendChildMessage -> appendChild(message.parentId, message.childId)
       is AppendChildToContainerMessage ->
         appendChildToContainer(message.containerId, message.childId)
-      is AppendInitialChildMessage -> appendInitialChild(message.parentId, message.childId)
+      is AppendInitialChildMessage -> appendInitialChild(message.parentId,
+        message.childId)
       is ClearContainerMessage -> clearContainer(message.containerId)
+      is CommitMountMessage -> commitMount(message.instance,
+        message.type,
+        message.props)
+      is CommitTextUpdateMessage -> commitTextUpdate(message.textInstance,
+        message.oldText,
+        message.newText)
       is CommitUpdateMessage ->
-        commitUpdate(message.instanceId, message.prevProps, message.prevProps)
+        commitUpdate(message.instanceId,
+          message.type,
+          message.prevProps,
+          message.prevProps)
       is CreateInstanceMessage -> createInstance(message.instanceId,
         message.type,
         message.props)
+      is CreateTextInstanceMessage -> createTextInstance(message.instanceId,
+        message.text)
       is HideInstanceMessage -> hideInstance(message.instanceId)
+      is HideTextInstanceMessage -> hideTextInstance(message.textInstance)
       is InsertBeforeMessage ->
         insertBefore(message.parentId, message.childId, message.beforeChildId)
       is InsertInContainerBeforeMessage ->
-        insertInContainerBefore(message.containerId, message.childId, message.beforeChildId)
-      is InvokeCallbackMessage -> invokeCallback(message.callbackId, message.args)
+        insertInContainerBefore(message.containerId,
+          message.childId,
+          message.beforeChildId)
+      is InvokeCallbackMessage -> invokeCallback(message.callbackId,
+        message.args)
+      is PreparePortalMountMessage -> preparePortalMount(message.containerInfo)
       is RemoveChildFromContainerMessage ->
         removeChildFromContainer(message.containerId, message.childId)
       is RemoveChildMessage -> removeChild(message.parentId, message.childId)
-      is UnhideInstanceMessage -> unhideInstance(message.instanceId, message.props)
+      is ResetAfterCommitMessage -> resetAfterCommit(message.containerInfo)
+      is ResetTextContentMessage -> resetTextContent(message.instance)
+      is UnhideInstanceMessage -> unhideInstance(message.instanceId,
+        message.props)
+      is UnhideTextInstanceMessage -> unhideTextInstance(message.textInstance,
+        message.text)
       else -> error("Unsupported message $message.")
     }
   }
@@ -70,12 +92,29 @@ class ReactSwingBridge : WsMessageHandler {
     logger.info("clearContainer($containerId)")
   }
 
+  private fun commitMount(
+    instance: Int,
+    type: String,
+    props: Map<String, Any?>,
+  ) {
+    logger.info("commitMount($instance, $type, $props)")
+  }
+
+  private fun commitTextUpdate(
+    textInstance: Int,
+    oldText: String,
+    newText: String,
+  ) {
+    logger.info("commitTextUpdate($textInstance, $oldText, $newText)")
+  }
+
   private fun commitUpdate(
     instanceId: Int,
+    type: String,
     prevProps: Map<String, Any?>,
     nextProps: Map<String, Any?>,
   ) {
-    logger.info("commitUpdate($instanceId, $prevProps, $nextProps)")
+    logger.info("commitUpdate($instanceId, $type, $prevProps, $nextProps)")
   }
 
   private fun createInstance(
@@ -86,10 +125,23 @@ class ReactSwingBridge : WsMessageHandler {
     logger.info("createInstance($instanceId, $type, $props)")
   }
 
+  private fun createTextInstance(
+    instanceId: Int,
+    text: String,
+  ) {
+    logger.info("createTextInstance($instanceId, $text)")
+  }
+
   private fun hideInstance(
     instanceId: Int,
   ) {
     logger.info("hideInstance($instanceId)")
+  }
+
+  private fun hideTextInstance(
+    textInstance: Int,
+  ) {
+    logger.info("hideTextInstance($textInstance)")
   }
 
   private fun insertBefore(
@@ -115,6 +167,12 @@ class ReactSwingBridge : WsMessageHandler {
     logger.info("invokeCallback($callbackId, $args)")
   }
 
+  private fun preparePortalMount(
+    containerInfo: Int,
+  ) {
+    logger.info("preparePortalMount($containerInfo)")
+  }
+
   private fun removeChildFromContainer(
     containerId: Int,
     childId: Int,
@@ -129,10 +187,29 @@ class ReactSwingBridge : WsMessageHandler {
     logger.info("removeChild($parentId, $childId)")
   }
 
+  private fun resetAfterCommit(
+    containerInfo: Int,
+  ) {
+    logger.info("resetAfterCommit($containerInfo)")
+  }
+
+  private fun resetTextContent(
+    instance: Int,
+  ) {
+    logger.info("resetTextContent($instance)")
+  }
+
   private fun unhideInstance(
     instanceId: Int,
     props: Map<String, Any?>,
   ) {
     logger.info("unhideInstance($instanceId, $props)")
+  }
+
+  private fun unhideTextInstance(
+    textInstance: Int,
+    text: String,
+  ) {
+    logger.info("unhideTextInstance($textInstance, $text)")
   }
 }
