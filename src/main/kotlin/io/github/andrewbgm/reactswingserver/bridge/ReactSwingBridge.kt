@@ -1,6 +1,5 @@
-package io.github.andrewbgm.reactswingserver
+package io.github.andrewbgm.reactswingserver.bridge
 
-import io.github.andrewbgm.reactswingserver.gson.*
 import io.javalin.websocket.WsHandler
 import io.javalin.websocket.WsMessageContext
 import io.javalin.websocket.WsMessageHandler

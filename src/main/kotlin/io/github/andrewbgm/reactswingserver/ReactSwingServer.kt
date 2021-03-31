@@ -1,7 +1,7 @@
 package io.github.andrewbgm.reactswingserver
 
 import com.google.gson.GsonBuilder
-import io.github.andrewbgm.reactswingserver.gson.*
+import io.github.andrewbgm.reactswingserver.bridge.*
 import io.javalin.Javalin
 import io.javalin.plugin.json.FromJsonMapper
 import io.javalin.plugin.json.JavalinJson

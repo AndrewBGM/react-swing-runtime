@@ -1,4 +1,4 @@
-package io.github.andrewbgm.reactswingserver.gson
+package io.github.andrewbgm.reactswingserver.bridge
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
