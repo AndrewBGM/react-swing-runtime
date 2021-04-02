@@ -12,7 +12,7 @@ import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
 class MessageAdapter(
-  vararg messageClazzes: KClass<out Message>,
+  vararg messageTypes: KClass<out Message>,
 ) : JsonDeserializer<Message>, JsonSerializer<Message> {
   private val messageClazzByType: MutableMap<String, KClass<out Message>> =
     mutableMapOf()
@@ -20,7 +20,7 @@ class MessageAdapter(
     mutableMapOf()
 
   init {
-    messageClazzes.forEach(::registerMessageClass)
+    messageTypes.forEach(::registerMessageClass)
   }
 
   override fun deserialize(

@@ -33,7 +33,6 @@ dependencies {
   testImplementation(kotlin("test-junit"))
 }
 
-
 publishing {
   repositories {
     maven {
