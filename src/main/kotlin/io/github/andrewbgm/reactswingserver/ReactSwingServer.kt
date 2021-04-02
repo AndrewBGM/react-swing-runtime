@@ -1,13 +1,11 @@
 package io.github.andrewbgm.reactswingserver
 
-import com.google.gson.GsonBuilder
+import com.google.gson.*
 import io.github.andrewbgm.reactswingserver.gson.*
 import io.github.andrewbgm.reactswingserver.messages.*
-import io.javalin.Javalin
-import io.javalin.plugin.json.FromJsonMapper
-import io.javalin.plugin.json.JavalinJson
-import io.javalin.plugin.json.ToJsonMapper
-import org.slf4j.LoggerFactory
+import io.javalin.*
+import io.javalin.plugin.json.*
+import org.slf4j.*
 
 class ReactSwingServer {
   private val logger = LoggerFactory.getLogger(ReactSwingServer::class.java)

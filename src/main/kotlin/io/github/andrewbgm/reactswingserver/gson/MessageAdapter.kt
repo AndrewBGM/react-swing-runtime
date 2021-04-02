@@ -1,15 +1,9 @@
 package io.github.andrewbgm.reactswingserver.gson
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonObject
-import com.google.gson.JsonSerializationContext
-import com.google.gson.JsonSerializer
+import com.google.gson.*
 import io.github.andrewbgm.reactswingserver.messages.*
-import java.lang.reflect.Type
-import kotlin.reflect.KClass
+import java.lang.reflect.*
+import kotlin.reflect.*
 
 class MessageAdapter(
   vararg messageTypes: KClass<out Message>,
