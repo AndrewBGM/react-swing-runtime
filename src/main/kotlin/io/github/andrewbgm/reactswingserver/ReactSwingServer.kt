@@ -44,12 +44,15 @@ class ReactSwingServer {
         AppendChildMessage::class,
         AppendChildToContainerMessage::class,
         ClearContainerMessage::class,
+        CommitTextUpdateMessage::class,
         CommitUpdateMessage::class,
         CreateInstanceMessage::class,
+        CreateTextInstanceMessage::class,
         InsertBeforeMessage::class,
         InsertInContainerBeforeMessage::class,
         RemoveChildFromContainerMessage::class,
         RemoveChildMessage::class,
+        ResetTextContentMessage::class,
       ))
       .create()
 
