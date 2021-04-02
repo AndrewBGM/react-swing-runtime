@@ -10,7 +10,7 @@ import io.javalin.plugin.json.ToJsonMapper
 import org.slf4j.LoggerFactory
 
 class ReactSwingServer {
-  private val logger = LoggerFactory.getLogger(ReactSwingServer::class.java);
+  private val logger = LoggerFactory.getLogger(ReactSwingServer::class.java)
 
   private val app: Javalin by lazy { configureApp() }
 
@@ -47,6 +47,7 @@ class ReactSwingServer {
         CommitUpdateMessage::class,
         CreateInstanceMessage::class,
         InsertBeforeMessage::class,
+        InsertInContainerBeforeMessage::class,
         RemoveChildFromContainerMessage::class,
         RemoveChildMessage::class,
       ))
