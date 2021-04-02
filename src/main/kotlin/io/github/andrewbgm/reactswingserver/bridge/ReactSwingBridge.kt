@@ -19,7 +19,7 @@ class ReactSwingBridge : WsConnectHandler, WsMessageHandler {
   }
 
   override fun handleConnect(
-    ctx: WsConnectContext
+    ctx: WsConnectContext,
   ) {
     ws = ctx
   }
