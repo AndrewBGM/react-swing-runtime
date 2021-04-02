@@ -31,7 +31,7 @@ class ReactSwingServer {
       .create()
       .ws("/ws") { ws ->
         ws.onConnect { logger.info("Connection opened.") }
-        ws.onMessage { logger.info("Message received: ${it.message()}") }
+        ws.onMessage { logger.info("Message received: ${it.message<Message>()}") }
         ws.onClose { logger.info("Connection closed.") }
         ws.onError { logger.error("Connection error: ${it.error()}") }
       }
@@ -52,7 +52,6 @@ class ReactSwingServer {
         InsertInContainerBeforeMessage::class,
         RemoveChildFromContainerMessage::class,
         RemoveChildMessage::class,
-        ResetTextContentMessage::class,
       ))
       .create()
 
