@@ -33,14 +33,19 @@ dependencies {
   testImplementation(kotlin("test-junit"))
 }
 
+fun findProperty(
+  propertyName: String,
+  fallbackName: String
+): String = project.findProperty(propertyName) as String? ?: System.getenv(fallbackName)
+
 publishing {
   repositories {
     maven {
       name = "GitHubPackages"
       url = uri("https://maven.pkg.github.com/andrewbgm/react-swing-server")
       credentials {
-        username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-        password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+        username = findProperty("gpr.user", "USERNAME")
+        password = findProperty("gpr.key", "TOKEN")
       }
     }
   }
