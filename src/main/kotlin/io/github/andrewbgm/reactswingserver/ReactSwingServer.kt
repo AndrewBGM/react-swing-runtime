@@ -29,10 +29,16 @@ class ReactSwingServer {
       .create()
       .ws("/ws") { ws ->
         ws.onConnect { logger.info("Connection opened.") }
-        ws.onMessage { logger.info("Message received: ${it.message<Message>()}") }
+        ws.onMessage { handleMessage(it.message<Message>()) }
         ws.onClose { logger.info("Connection closed.") }
         ws.onError { logger.error("Connection error: ${it.error()}") }
       }
+  }
+
+  private fun handleMessage(
+    message: Message,
+  ) {
+    logger.info("Message received: $message")
   }
 
   private fun configureGsonMappers() {
@@ -41,6 +47,7 @@ class ReactSwingServer {
       .registerTypeAdapter(Message::class.java, MessageAdapter(
         AppendChildMessage::class,
         AppendChildToContainerMessage::class,
+        AppendInitialChildMessage::class,
         ClearContainerMessage::class,
         CommitTextUpdateMessage::class,
         CommitUpdateMessage::class,
