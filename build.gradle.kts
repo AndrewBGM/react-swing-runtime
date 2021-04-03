@@ -36,7 +36,8 @@ dependencies {
 fun findProperty(
   propertyName: String,
   fallbackName: String
-): String = project.findProperty(propertyName) as String? ?: System.getenv(fallbackName)
+): String? =
+  project.findProperty(propertyName) as String? ?: System.getenv(fallbackName)
 
 publishing {
   repositories {
