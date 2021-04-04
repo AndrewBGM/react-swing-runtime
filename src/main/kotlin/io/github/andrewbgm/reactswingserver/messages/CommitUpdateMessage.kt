@@ -4,6 +4,10 @@ import com.google.gson.annotations.*
 
 data class CommitUpdateMessage(
   @Expose val instanceId: Int,
-  @Expose val type: String,
-  @Expose val updatePayload: Map<String, Any?>,
-) : Message
+  @Expose val updatePayload: CommitUpdatePayload,
+) : IMessage
+
+data class CommitUpdatePayload(
+  val type: String,
+  val changedProps: Map<String, Any?>,
+)

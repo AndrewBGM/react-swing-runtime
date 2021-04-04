@@ -6,4 +6,4 @@ data class InsertBeforeMessage(
   @Expose val parentId: Int,
   @Expose val childId: Int,
   @Expose val beforeChildId: Int,
-) : Message
+) : IMessage

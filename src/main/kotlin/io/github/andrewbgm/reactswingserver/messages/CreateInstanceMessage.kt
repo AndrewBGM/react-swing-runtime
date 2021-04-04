@@ -6,4 +6,4 @@ data class CreateInstanceMessage(
   @Expose val instanceId: Int,
   @Expose val type: String,
   @Expose val props: Map<String, Any?>,
-) : Message
+) : IMessage

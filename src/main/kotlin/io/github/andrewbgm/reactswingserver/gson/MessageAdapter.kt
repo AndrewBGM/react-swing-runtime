@@ -6,22 +6,23 @@ import java.lang.reflect.*
 import kotlin.reflect.*
 
 class MessageAdapter(
-  vararg messageTypes: KClass<out Message>,
-) : JsonDeserializer<Message>, JsonSerializer<Message> {
-  private val messageClazzByType: MutableMap<String, KClass<out Message>> =
+  vararg types: KClass<out IMessage>,
+) : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
+  private val clazzByType: MutableMap<String, KClass<out IMessage>> =
     mutableMapOf()
-  private val messageTypeByClazz: MutableMap<KClass<out Message>, String> =
+
+  private val typeByClazz: MutableMap<KClass<out IMessage>, String> =
     mutableMapOf()
 
   init {
-    messageTypes.forEach(::registerMessageClass)
+    types.forEach(::registerMessageClass)
   }
 
   override fun deserialize(
     src: JsonElement,
     typeOfSrc: Type,
     ctx: JsonDeserializationContext,
-  ): Message? {
+  ): IMessage? {
     if (!src.isJsonObject) {
       return null
     }
@@ -30,12 +31,12 @@ class MessageAdapter(
     val type = obj.get("type").asString
     val payload = obj.get("payload").asJsonObject
 
-    val clazz = messageClazzByType[type] ?: error("Unsupported message $type.")
+    val clazz = clazzByType[type] ?: error("Unsupported type $type.")
     return ctx.deserialize(payload, clazz.java)
   }
 
   override fun serialize(
-    src: Message?,
+    src: IMessage?,
     typeOfSrc: Type,
     ctx: JsonSerializationContext,
   ): JsonElement {
@@ -44,7 +45,8 @@ class MessageAdapter(
     }
 
     val type =
-      messageTypeByClazz[src::class] ?: error("Unsupported message $src.")
+      typeByClazz[src::class] ?: error("Unsupported type $src.")
+
     val obj = JsonObject()
     obj.addProperty("type", type)
     obj.add("payload", ctx.serialize(src))
@@ -52,11 +54,11 @@ class MessageAdapter(
   }
 
   private fun registerMessageClass(
-    clazz: KClass<out Message>,
+    clazz: KClass<out IMessage>,
   ) {
     val type = getTypenameFromClass(clazz)
-    messageClazzByType[type] = clazz
-    messageTypeByClazz[clazz] = type
+    clazzByType[type] = clazz
+    typeByClazz[clazz] = type
   }
 
   private fun getTypenameFromClass(

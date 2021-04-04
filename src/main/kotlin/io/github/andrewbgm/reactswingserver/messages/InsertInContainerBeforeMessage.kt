@@ -6,4 +6,4 @@ data class InsertInContainerBeforeMessage(
   @Expose val containerId: Int,
   @Expose val childId: Int,
   @Expose val beforeChildId: Int,
-) : Message
+) : IMessage
