@@ -43,6 +43,7 @@ class ReactSwingServer {
         CreateTextInstanceMessage::class,
         InsertBeforeMessage::class,
         InsertInContainerBeforeMessage::class,
+        InvokeCallbackMessage::class,
         RemoveChildFromContainerMessage::class,
         RemoveChildMessage::class,
       ))
