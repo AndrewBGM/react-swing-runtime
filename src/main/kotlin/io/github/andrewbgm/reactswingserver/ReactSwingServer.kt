@@ -41,7 +41,9 @@ class ReactSwingServer {
   private fun handleMessage(
     ctx: WsMessageContext
   ) {
-    println("Connection message: ${ctx.message()}")
+    val message = ctx.message()
+    println("Connection message: $message")
+    ctx.send(message)
   }
 
   private fun handleServerStarting() {
@@ -97,11 +99,13 @@ class ReactSwingServer {
           CommitUpdateMessage::class,
           CreateInstanceMessage::class,
           CreateTextInstanceMessage::class,
+          FreeCallbackMessage::class,
           InsertBeforeMessage::class,
           InsertInContainerBeforeMessage::class,
           InvokeCallbackMessage::class,
           RemoveChildFromContainerMessage::class,
           RemoveChildMessage::class,
+          StartApplicationMessage::class,
         )
       )
       .create()
