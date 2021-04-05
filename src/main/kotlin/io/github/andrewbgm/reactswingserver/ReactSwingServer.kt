@@ -43,7 +43,6 @@ class ReactSwingServer {
   ) {
     val message = ctx.message<IMessage>()
     println("Connection message: $message")
-    ctx.send(message)
   }
 
   private fun handleServerStarting() {
