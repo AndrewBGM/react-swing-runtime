@@ -147,6 +147,8 @@ class ReactSwingServerBridge {
     } else if (parentInstance is HostInstance && childInstance is HostInstance) {
       parentInstance.component.remove(childInstance.component)
     } else error("Not sure what you want me to do here, chief.")
+
+    instanceById.remove(childId)
   }
 
   private fun createComponent(
