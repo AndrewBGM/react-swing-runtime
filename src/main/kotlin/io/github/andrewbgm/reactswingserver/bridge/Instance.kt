@@ -7,20 +7,20 @@ sealed class Instance
 data class HostInstance(
   val component: Container,
 ) : Instance() {
-  private val _textInstances: MutableList<TextInstance> = mutableListOf()
-  val textInstances: List<TextInstance>
-    get() = _textInstances
+  private val textInstances: MutableList<TextInstance> = mutableListOf()
+  val text: String
+    get() = textInstances.joinToString("") { it.text }
 
   operator fun plusAssign(
     textInstance: TextInstance,
   ) {
-    _textInstances += textInstance
+    textInstances += textInstance
   }
 
   operator fun minusAssign(
     textInstance: TextInstance,
   ) {
-    _textInstances -= textInstance
+    textInstances -= textInstance
   }
 }
 

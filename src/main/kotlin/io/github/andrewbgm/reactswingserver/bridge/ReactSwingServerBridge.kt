@@ -49,11 +49,8 @@ class ReactSwingServerBridge {
       parentInstance += childInstance
       childInstance.host = parentInstance
 
-      val updatedText =
-        parentInstance.textInstances.joinToString("") { it.text }
-
       when (val component = parentInstance.component) {
-        is JButton -> component.text = updatedText
+        is JButton -> component.text = parentInstance.text
       }
     } else if (parentInstance is HostInstance && childInstance is HostInstance) {
       parentInstance.component.add(childInstance.component)
@@ -116,11 +113,8 @@ class ReactSwingServerBridge {
 
     val parentInstance = instance.host
     if (parentInstance != null) {
-      val updatedText =
-        parentInstance.textInstances.joinToString("") { it.text }
-
       when (val component = parentInstance.component) {
-        is JButton -> component.text = updatedText
+        is JButton -> component.text = parentInstance.text
       }
     }
   }
@@ -138,11 +132,8 @@ class ReactSwingServerBridge {
       parentInstance -= childInstance
       childInstance.host = null
 
-      val updatedText =
-        parentInstance.textInstances.joinToString("") { it.text }
-
       when (val component = parentInstance.component) {
-        is JButton -> component.text = updatedText
+        is JButton -> component.text = parentInstance.text
       }
     } else if (parentInstance is HostInstance && childInstance is HostInstance) {
       parentInstance.component.remove(childInstance.component)
