@@ -1,6 +1,7 @@
 package io.github.andrewbgm.reactswingserver
 
 import com.google.gson.*
+import io.github.andrewbgm.reactswingserver.bridge.*
 import io.github.andrewbgm.reactswingserver.gson.*
 import io.github.andrewbgm.reactswingserver.messages.*
 import io.javalin.*
@@ -9,6 +10,8 @@ import io.javalin.websocket.*
 
 class ReactSwingServer {
   private val app: Javalin by lazy { configureApp() }
+
+  private val bridge: ReactSwingServerBridge by lazy { ReactSwingServerBridge() }
 
   fun start(
     port: Int
@@ -39,10 +42,54 @@ class ReactSwingServer {
   }
 
   private fun handleMessage(
-    ctx: WsMessageContext
+    ws: WsMessageContext
   ) {
-    val message = ctx.message<IMessage>()
-    println("Connection message: $message")
+    when (val message = ws.message<IMessage>()) {
+      is CreateTextInstanceMessage -> bridge.createTextInstance(
+        ws,
+        message.instanceId,
+        message.text
+      )
+      is CreateInstanceMessage -> bridge.createInstance(
+        ws,
+        message.instanceId,
+        message.type,
+        message.props
+      )
+      is AppendInitialChildMessage -> bridge.appendInitialChild(
+        ws,
+        message.parentId,
+        message.childId
+      )
+      is ClearContainerMessage -> bridge.clearContainer(
+        ws,
+        message.containerId
+      )
+      is AppendChildToContainerMessage -> bridge.appendChildToContainer(
+        ws,
+        message.containerId,
+        message.childId
+      )
+      is StartApplicationMessage -> bridge.startApplication(
+        ws,
+        message.containerId
+      )
+      is CommitTextUpdateMessage -> bridge.commitTextUpdate(
+        message.instanceId,
+        message.oldText,
+        message.newText
+      )
+      is RemoveChildMessage -> bridge.removeChild(
+        message.parentId,
+        message.childId
+      )
+      is AppendChildMessage -> bridge.appendChild(
+        ws,
+        message.parentId,
+        message.childId
+      )
+      else -> println(message)
+    }
   }
 
   private fun handleServerStarting() {
