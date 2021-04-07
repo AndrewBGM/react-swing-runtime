@@ -57,3 +57,8 @@ publishing {
     }
   }
 }
+
+tasks.register<JavaExec>("sample") {
+  classpath = sourceSets.test.get().runtimeClasspath
+  main = "io.github.andrewbgm.reactswingserver.ReactSwingServerTestKt"
+}

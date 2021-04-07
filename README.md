@@ -12,4 +12,6 @@ gradlew build
 
 ## Running locally
 
-Currently, you can't run a local server instance via a gradle task (coming soon), so I recommend using IntelliJ to load the project, and launching the `ReactSwingServerTest.main` as a run configuration.
+```
+gradlew sample
+```
