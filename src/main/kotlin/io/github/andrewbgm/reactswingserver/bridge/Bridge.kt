@@ -1,9 +1,9 @@
-package io.github.andrewbgm.reactswingserver
+package io.github.andrewbgm.reactswingserver.bridge
 
 import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.websocket.*
 
-class ReactSwingServerBridge {
+class Bridge {
   fun appendChild(
     ws: WsContext,
     parentId: Int,
@@ -46,7 +46,6 @@ class ReactSwingServerBridge {
   fun commitUpdate(
     ws: WsContext,
     instanceId: Int,
-    type: String,
     changedProps: Map<String, Any?>,
   ) {
 

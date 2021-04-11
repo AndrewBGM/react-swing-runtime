@@ -1,6 +1,7 @@
 package io.github.andrewbgm.reactswingserver
 
 import com.google.gson.*
+import io.github.andrewbgm.reactswingserver.bridge.*
 import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.*
 import io.javalin.plugin.json.*
@@ -13,7 +14,7 @@ class ReactSwingServer {
 
   private val app: Javalin by lazy { configureApp() }
 
-  private val bridge: ReactSwingServerBridge by lazy { configureBridge() }
+  private val bridge: Bridge by lazy { configureBridge() }
 
   fun start(
     port: Int
@@ -71,7 +72,6 @@ class ReactSwingServer {
       is CommitUpdateMessage -> bridge.commitUpdate(
         ws,
         message.instanceId,
-        message.type,
         message.changedProps
       )
       is CreateInstanceMessage -> bridge.createInstance(
@@ -123,8 +123,8 @@ class ReactSwingServer {
       }
   }
 
-  private fun configureBridge(): ReactSwingServerBridge =
-    ReactSwingServerBridge()
+  private fun configureBridge(): Bridge =
+    Bridge()
 
   private fun configureGson() {
     val gson = GsonBuilder()
