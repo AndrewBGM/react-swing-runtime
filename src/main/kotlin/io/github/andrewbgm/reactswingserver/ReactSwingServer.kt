@@ -26,13 +26,13 @@ class ReactSwingServer {
   private fun handleClose(
     ctx: WsCloseContext
   ) {
-    println("Connection closed.")
+    println("Session #${ctx.sessionId} closed.")
   }
 
   private fun handleConnect(
     ctx: WsConnectContext
   ) {
-    println("Connection opened.")
+    println("Session #${ctx.sessionId} opened.")
   }
 
   private fun handleError(
@@ -45,10 +45,33 @@ class ReactSwingServer {
     ws: WsMessageContext
   ) {
     when (val message = ws.message<IMessage>()) {
-      is CreateTextInstanceMessage -> bridge.createTextInstance(
+      is AppendChildMessage -> bridge.appendChild(
+        ws,
+        message.parentId,
+        message.childId
+      )
+      is AppendChildToContainerMessage -> bridge.appendChildToContainer(
+        ws,
+        message.containerId,
+        message.childId
+      )
+      is AppendInitialChildMessage -> bridge.appendInitialChild(
+        ws,
+        message.parentId,
+        message.childId
+      )
+      is ClearContainerMessage -> bridge.clearContainer(ws, message.containerId)
+      is CommitTextUpdateMessage -> bridge.commitTextUpdate(
         ws,
         message.instanceId,
-        message.text
+        message.oldText,
+        message.newText
+      )
+      is CommitUpdateMessage -> bridge.commitUpdate(
+        ws,
+        message.type,
+        message.instanceId,
+        message.changedProps
       )
       is CreateInstanceMessage -> bridge.createInstance(
         ws,
@@ -56,37 +79,42 @@ class ReactSwingServer {
         message.type,
         message.props
       )
-      is AppendInitialChildMessage -> bridge.appendInitialChild(
+      is CreateTextInstanceMessage -> bridge.createTextInstance(
+        ws,
+        message.instanceId,
+        message.text
+      )
+      is FreeCallbackMessage -> bridge.freeCallback(ws, message.callbackId)
+      is InsertBeforeMessage -> bridge.insertBefore(
         ws,
         message.parentId,
-        message.childId
+        message.childId,
+        message.beforeChildId
       )
-      is ClearContainerMessage -> bridge.clearContainer(
-        ws,
-        message.containerId
-      )
-      is AppendChildToContainerMessage -> bridge.appendChildToContainer(
+      is InsertInContainerBeforeMessage -> bridge.insertInContainerBefore(
         ws,
         message.containerId,
+        message.childId,
+        message.beforeChildId
+      )
+      is InvokeCallbackMessage -> bridge.invokeCallback(
+        ws,
+        message.callbackId,
+        message.args
+      )
+      is RemoveChildFromContainerMessage -> bridge.removeChildFromContainer(
+        ws,
+        message.containerId,
+        message.childId
+      )
+      is RemoveChildMessage -> bridge.removeChild(
+        ws,
+        message.parentId,
         message.childId
       )
       is StartApplicationMessage -> bridge.startApplication(
         ws,
         message.containerId
-      )
-      is CommitTextUpdateMessage -> bridge.commitTextUpdate(
-        message.instanceId,
-        message.oldText,
-        message.newText
-      )
-      is RemoveChildMessage -> bridge.removeChild(
-        message.parentId,
-        message.childId
-      )
-      is AppendChildMessage -> bridge.appendChild(
-        ws,
-        message.parentId,
-        message.childId
       )
       else -> println(message)
     }
