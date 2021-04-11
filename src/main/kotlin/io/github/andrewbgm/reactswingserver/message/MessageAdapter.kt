@@ -1,7 +1,6 @@
-package io.github.andrewbgm.reactswingserver.gson
+package io.github.andrewbgm.reactswingserver.message
 
 import com.google.gson.*
-import io.github.andrewbgm.reactswingserver.messages.*
 import java.lang.reflect.*
 import kotlin.reflect.*
 

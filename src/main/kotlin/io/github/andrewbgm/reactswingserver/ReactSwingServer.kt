@@ -1,17 +1,19 @@
 package io.github.andrewbgm.reactswingserver
 
 import com.google.gson.*
-import io.github.andrewbgm.reactswingserver.bridge.*
-import io.github.andrewbgm.reactswingserver.gson.*
-import io.github.andrewbgm.reactswingserver.messages.*
+import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.*
 import io.javalin.plugin.json.*
 import io.javalin.websocket.*
+import org.slf4j.*
 
 class ReactSwingServer {
+  private val logger: Logger =
+    LoggerFactory.getLogger(ReactSwingServer::class.java)
+
   private val app: Javalin by lazy { configureApp() }
 
-  private val bridge: ReactSwingServerBridge by lazy { ReactSwingServerBridge() }
+  private val bridge: ReactSwingServerBridge by lazy { configureBridge() }
 
   fun start(
     port: Int
@@ -26,19 +28,19 @@ class ReactSwingServer {
   private fun handleClose(
     ctx: WsCloseContext
   ) {
-    println("Session #${ctx.sessionId} closed.")
+    logger.info("Session #${ctx.sessionId} closed.")
   }
 
   private fun handleConnect(
     ctx: WsConnectContext
   ) {
-    println("Session #${ctx.sessionId} opened.")
+    logger.info("Session #${ctx.sessionId} opened.")
   }
 
   private fun handleError(
     ctx: WsErrorContext
   ) {
-    println("Connection error: ${ctx.error()}")
+    logger.error("Connection error: ${ctx.error()}")
   }
 
   private fun handleMessage(
@@ -64,13 +66,12 @@ class ReactSwingServer {
       is CommitTextUpdateMessage -> bridge.commitTextUpdate(
         ws,
         message.instanceId,
-        message.oldText,
-        message.newText
+        message.text
       )
       is CommitUpdateMessage -> bridge.commitUpdate(
         ws,
-        message.type,
         message.instanceId,
+        message.type,
         message.changedProps
       )
       is CreateInstanceMessage -> bridge.createInstance(
@@ -84,7 +85,6 @@ class ReactSwingServer {
         message.instanceId,
         message.text
       )
-      is FreeCallbackMessage -> bridge.freeCallback(ws, message.callbackId)
       is InsertBeforeMessage -> bridge.insertBefore(
         ws,
         message.parentId,
@@ -97,11 +97,6 @@ class ReactSwingServer {
         message.childId,
         message.beforeChildId
       )
-      is InvokeCallbackMessage -> bridge.invokeCallback(
-        ws,
-        message.callbackId,
-        message.args
-      )
       is RemoveChildFromContainerMessage -> bridge.removeChildFromContainer(
         ws,
         message.containerId,
@@ -112,46 +107,14 @@ class ReactSwingServer {
         message.parentId,
         message.childId
       )
-      is StartApplicationMessage -> bridge.startApplication(
-        ws,
-        message.containerId
-      )
-      else -> println(message)
+      else -> error("Unsupported message: $message")
     }
-  }
-
-  private fun handleServerStarting() {
-    println("Server starting...")
-  }
-
-  private fun handleServerStarted() {
-    println("Server started!")
-  }
-
-  private fun handleServerStartFailed() {
-    println("Server failed to start!")
-  }
-
-  private fun handleServerStopping() {
-    println("Server stopping...")
-  }
-
-  private fun handleServerStopped() {
-    println("Server stopped!")
   }
 
   private fun configureApp(): Javalin {
     configureGson()
 
     return Javalin.create()
-      .events {
-        it.serverStarting(::handleServerStarting)
-        it.serverStarted(::handleServerStarted)
-        it.serverStartFailed(::handleServerStartFailed)
-
-        it.serverStopping(::handleServerStopping)
-        it.serverStopped(::handleServerStopped)
-      }
       .ws("/") { ws ->
         ws.onClose(::handleClose)
         ws.onConnect(::handleConnect)
@@ -159,6 +122,9 @@ class ReactSwingServer {
         ws.onMessage(::handleMessage)
       }
   }
+
+  private fun configureBridge(): ReactSwingServerBridge =
+    ReactSwingServerBridge()
 
   private fun configureGson() {
     val gson = GsonBuilder()
@@ -179,7 +145,6 @@ class ReactSwingServer {
           InvokeCallbackMessage::class,
           RemoveChildFromContainerMessage::class,
           RemoveChildMessage::class,
-          StartApplicationMessage::class,
         )
       )
       .create()
