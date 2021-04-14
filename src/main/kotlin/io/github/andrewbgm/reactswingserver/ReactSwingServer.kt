@@ -107,6 +107,7 @@ class ReactSwingServer {
         message.parentId,
         message.childId
       )
+      is StartApplicationMessage -> bridge.startApplication()
       else -> error("Unsupported message: $message")
     }
   }
@@ -145,6 +146,7 @@ class ReactSwingServer {
           InvokeCallbackMessage::class,
           RemoveChildFromContainerMessage::class,
           RemoveChildMessage::class,
+          StartApplicationMessage::class,
         )
       )
       .create()

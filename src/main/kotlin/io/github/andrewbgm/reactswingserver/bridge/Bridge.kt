@@ -2,14 +2,17 @@ package io.github.andrewbgm.reactswingserver.bridge
 
 import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.websocket.*
+import org.slf4j.*
 
 class Bridge {
+  private val logger = LoggerFactory.getLogger(Bridge::class.java)
+
   fun appendChild(
     ws: WsContext,
     parentId: Int,
     childId: Int,
   ) {
-
+    logger.info("appendChild($parentId, $childId)")
   }
 
   fun appendChildToContainer(
@@ -17,7 +20,7 @@ class Bridge {
     containerId: Int,
     childId: Int,
   ) {
-
+    logger.info("appendToContainerChild($containerId, $childId)")
   }
 
   fun appendInitialChild(
@@ -25,14 +28,14 @@ class Bridge {
     parentId: Int,
     childId: Int,
   ) {
-
+    logger.info("appendInitialChild($parentId, $childId)")
   }
 
   fun clearContainer(
     ws: WsContext,
     containerId: Int,
   ) {
-
+    logger.info("clearContainer($containerId)")
   }
 
   fun commitTextUpdate(
@@ -40,7 +43,7 @@ class Bridge {
     instanceId: Int,
     text: String,
   ) {
-
+    logger.info("commitTextUpdate($instanceId, $text)")
   }
 
   fun commitUpdate(
@@ -48,7 +51,7 @@ class Bridge {
     instanceId: Int,
     changedProps: Map<String, Any?>,
   ) {
-
+    logger.info("commitUpdate($instanceId, $changedProps)")
   }
 
   fun createInstance(
@@ -57,7 +60,7 @@ class Bridge {
     type: String,
     props: Map<String, Any?>,
   ) {
-
+    logger.info("createInstance($instanceId, $type, $props)")
   }
 
   fun createTextInstance(
@@ -65,7 +68,7 @@ class Bridge {
     instanceId: Int,
     text: String,
   ) {
-
+    logger.info("createTextInstance($instanceId, $text)")
   }
 
   fun freeCallback(
@@ -81,7 +84,7 @@ class Bridge {
     childId: Int,
     beforeChildId: Int,
   ) {
-
+    logger.info("insertBefore($parentId, $childId, $beforeChildId)")
   }
 
   fun insertInContainerBefore(
@@ -90,7 +93,7 @@ class Bridge {
     childId: Int,
     beforeChildId: Int,
   ) {
-
+    logger.info("insertInContainerBefore($containerId, $childId, $beforeChildId)")
   }
 
   fun invokeCallback(
@@ -106,7 +109,7 @@ class Bridge {
     containerId: Int,
     childId: Int,
   ) {
-
+    logger.info("removeChildFromContainer($containerId, $childId)")
   }
 
   fun removeChild(
@@ -114,6 +117,10 @@ class Bridge {
     parentId: Int,
     childId: Int,
   ) {
+    logger.info("removeChild($parentId, $childId)")
+  }
 
+  fun startApplication() {
+    logger.info("startApplication()")
   }
 }
