@@ -120,7 +120,9 @@ class Bridge {
     logger.info("removeChild($parentId, $childId)")
   }
 
-  fun startApplication() {
+  fun startApplication(
+    ws: WsContext,
+  ) {
     logger.info("startApplication()")
   }
 }
