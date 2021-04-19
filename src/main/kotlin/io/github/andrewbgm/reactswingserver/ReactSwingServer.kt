@@ -2,6 +2,7 @@ package io.github.andrewbgm.reactswingserver
 
 import com.google.gson.*
 import io.github.andrewbgm.reactswingserver.bridge.*
+import io.github.andrewbgm.reactswingserver.bridge.adapters.*
 import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.*
 import io.javalin.plugin.json.*
@@ -124,8 +125,12 @@ class ReactSwingServer {
       }
   }
 
-  private fun configureBridge(): Bridge =
-    Bridge()
+  private fun configureBridge(): Bridge = BridgeBuilder()
+    .registerHostAdapter(JButtonAdapter())
+    .registerHostAdapter(JFrameAdapter())
+    .registerHostAdapter(JLabelAdapter())
+    .registerHostAdapter(JPanelAdapter())
+    .create()
 
   private fun configureGson() {
     val gson = GsonBuilder()

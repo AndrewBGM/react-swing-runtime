@@ -1,5 +1,7 @@
 package io.github.andrewbgm.reactswingserver.message
 
+import com.google.gson.annotations.*
+
 data class FreeCallbackMessage(
-  val callbackId: Int,
+  @Expose val callbackId: Int,
 ) : IMessage

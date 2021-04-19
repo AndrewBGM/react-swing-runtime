@@ -1,6 +1,8 @@
 package io.github.andrewbgm.reactswingserver.message
 
+import com.google.gson.annotations.*
+
 data class InvokeCallbackMessage(
-  val callbackId: Int,
-  val args: List<Any?>,
+  @Expose val callbackId: Int,
+  @Expose val args: List<Any?>,
 ) : IMessage
