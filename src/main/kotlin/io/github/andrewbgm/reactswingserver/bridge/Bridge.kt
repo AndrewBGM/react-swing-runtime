@@ -63,8 +63,8 @@ class Bridge(
 
   fun commitUpdate(
     instanceId: Int,
-    oldProps: HostProps?,
-    newProps: HostProps,
+    oldProps: Map<String, Any?>?,
+    newProps: Map<String, Any?>,
   ) {
     TODO("Not implemented yet")
   }
@@ -72,7 +72,7 @@ class Bridge(
   fun createInstance(
     instanceId: Int,
     type: String,
-    props: HostProps,
+    props: Map<String, Any?>,
   ) {
     TODO("Not implemented yet")
   }

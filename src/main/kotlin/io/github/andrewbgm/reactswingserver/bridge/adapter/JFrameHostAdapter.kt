@@ -7,7 +7,7 @@ import javax.swing.*
 class JFrameHostAdapter : IHostAdapter<JFrame> {
   override fun create(
     bridge: Bridge,
-    props: HostProps
+    props: Map<String, Any?>
   ): JFrame = JFrame().also {
     update(bridge, it, null, props)
   }
@@ -15,8 +15,8 @@ class JFrameHostAdapter : IHostAdapter<JFrame> {
   override fun update(
     bridge: Bridge,
     host: JFrame,
-    oldProps: HostProps?,
-    newProps: HostProps
+    oldProps: Map<String, Any?>?,
+    newProps: Map<String, Any?>
   ) {
     host.title = newProps.getOrDefault("title", host.title) as String?
   }

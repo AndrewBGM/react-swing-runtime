@@ -6,14 +6,14 @@ import java.awt.*
 interface IHostAdapter<T : Container> {
   fun create(
     bridge: Bridge,
-    props: HostProps,
+    props: Map<String, Any?>,
   ): T
 
   fun update(
     bridge: Bridge,
     host: T,
-    oldProps: HostProps?,
-    newProps: HostProps,
+    oldProps: Map<String, Any?>?,
+    newProps: Map<String, Any?>,
   )
 
   fun appendToContainer(

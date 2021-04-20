@@ -1,7 +1,7 @@
 package io.github.andrewbgm.reactswingserver.message
 
 import com.google.gson.annotations.*
-import io.github.andrewbgm.reactswingserver.bridge.adapter.*
+import io.github.andrewbgm.reactswingserver.bridge.*
 
 data class CommitUpdateMessage(
   @Expose val instanceId: Int,
