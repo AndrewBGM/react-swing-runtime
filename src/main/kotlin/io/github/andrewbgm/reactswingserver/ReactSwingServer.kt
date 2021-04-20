@@ -2,12 +2,13 @@ package io.github.andrewbgm.reactswingserver
 
 import com.google.gson.*
 import io.github.andrewbgm.reactswingserver.bridge.*
-import io.github.andrewbgm.reactswingserver.bridge.adapters.*
+import io.github.andrewbgm.reactswingserver.bridge.adapter.*
 import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.*
 import io.javalin.plugin.json.*
 import io.javalin.websocket.*
 import org.slf4j.*
+import javax.swing.*
 
 class ReactSwingServer {
   private val logger: Logger =
@@ -30,85 +31,83 @@ class ReactSwingServer {
   private fun handleClose(
     ctx: WsCloseContext
   ) {
+    Bridge.setContext(bridge, ctx)
+
     logger.info("Session #${ctx.sessionId} closed.")
   }
 
   private fun handleConnect(
     ctx: WsConnectContext
   ) {
+    Bridge.setContext(bridge, ctx)
+
     logger.info("Session #${ctx.sessionId} opened.")
   }
 
   private fun handleError(
     ctx: WsErrorContext
   ) {
+    Bridge.setContext(bridge, ctx)
+
     logger.error("Connection error: ${ctx.error()}")
   }
 
   private fun handleMessage(
-    ws: WsMessageContext
+    ctx: WsMessageContext
   ) {
-    when (val message = ws.message<IMessage>()) {
+    Bridge.setContext(bridge, ctx)
+
+    when (val message = ctx.message<IMessage>()) {
       is AppendChildMessage -> bridge.appendChild(
-        ws,
         message.parentId,
         message.childId
       )
       is AppendChildToContainerMessage -> bridge.appendChildToContainer(
-        ws,
         message.containerId,
         message.childId
       )
       is AppendInitialChildMessage -> bridge.appendInitialChild(
-        ws,
         message.parentId,
         message.childId
       )
-      is ClearContainerMessage -> bridge.clearContainer(ws, message.containerId)
+      is ClearContainerMessage -> bridge.clearContainer(message.containerId)
       is CommitTextUpdateMessage -> bridge.commitTextUpdate(
-        ws,
         message.instanceId,
         message.text
       )
       is CommitUpdateMessage -> bridge.commitUpdate(
-        ws,
         message.instanceId,
-        message.changedProps
+        message.oldProps,
+        message.newProps
       )
       is CreateInstanceMessage -> bridge.createInstance(
-        ws,
         message.instanceId,
         message.type,
         message.props
       )
       is CreateTextInstanceMessage -> bridge.createTextInstance(
-        ws,
         message.instanceId,
         message.text
       )
       is InsertBeforeMessage -> bridge.insertBefore(
-        ws,
         message.parentId,
         message.childId,
         message.beforeChildId
       )
       is InsertInContainerBeforeMessage -> bridge.insertInContainerBefore(
-        ws,
         message.containerId,
         message.childId,
         message.beforeChildId
       )
       is RemoveChildFromContainerMessage -> bridge.removeChildFromContainer(
-        ws,
         message.containerId,
         message.childId
       )
       is RemoveChildMessage -> bridge.removeChild(
-        ws,
         message.parentId,
         message.childId
       )
-      is StartApplicationMessage -> bridge.startApplication(ws)
+      is StartApplicationMessage -> bridge.startApplication()
       else -> error("Unsupported message: $message")
     }
   }
@@ -125,12 +124,9 @@ class ReactSwingServer {
       }
   }
 
-  private fun configureBridge(): Bridge = BridgeBuilder()
-    .registerHostAdapter(JButtonAdapter())
-    .registerHostAdapter(JFrameAdapter())
-    .registerHostAdapter(JLabelAdapter())
-    .registerHostAdapter(JPanelAdapter())
-    .create()
+  private fun configureBridge(): Bridge = Bridge(
+    JFrame::class to JFrameHostAdapter()
+  )
 
   private fun configureGson() {
     val gson = GsonBuilder()

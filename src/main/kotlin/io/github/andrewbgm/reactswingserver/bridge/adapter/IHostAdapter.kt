@@ -1,51 +1,53 @@
-package io.github.andrewbgm.reactswingserver.bridge
+package io.github.andrewbgm.reactswingserver.bridge.adapter
 
+import io.github.andrewbgm.reactswingserver.bridge.*
 import java.awt.*
 
 interface IHostAdapter<T : Container> {
   fun create(
     bridge: Bridge,
-    props: Map<String, Any?>,
+    props: HostProps,
   ): T
 
   fun update(
     bridge: Bridge,
     host: T,
-    changedProps: Map<String, Any?>,
+    oldProps: HostProps?,
+    newProps: HostProps,
   )
 
   fun appendToContainer(
     bridge: Bridge,
-    child: T,
+    host: T,
+  )
+
+  fun insertBeforeInContainer(
+    bridge: Bridge,
+    host: T,
+    beforeChild: Container,
   )
 
   fun removeFromContainer(
     bridge: Bridge,
-    child: T,
+    host: T,
   )
 
   fun appendChild(
     bridge: Bridge,
-    parent: T,
+    host: T,
     child: Container,
   )
 
   fun insertBefore(
     bridge: Bridge,
-    parent: T,
+    host: T,
     child: Container,
     beforeChild: Container,
   )
 
   fun removeChild(
     bridge: Bridge,
-    parent: T,
+    host: T,
     child: Container,
-  )
-
-  fun updateText(
-    bridge: Bridge,
-    parent: T,
-    text: String,
   )
 }
