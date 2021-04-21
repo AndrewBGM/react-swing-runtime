@@ -41,7 +41,7 @@ class JFrameHostAdapter : IHostAdapter<JFrame> {
     host: JFrame,
     beforeChild: Container
   ) {
-    TODO("Not implemented yet")
+    // noop
   }
 
   override fun removeFromContainer(
