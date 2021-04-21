@@ -25,7 +25,7 @@ class JButtonHostAdapter : IHostAdapter<JButton> {
       bridge.freeCallback(oldOnAction)
     }
 
-    if (newOnAction !== null && oldOnAction !== newOnAction) {
+    if (newOnAction !== null && oldOnAction != newOnAction) {
       host.actionListeners.forEach { host.removeActionListener(it) }
       host.addActionListener {
         bridge.invokeCallback(newOnAction)
