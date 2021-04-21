@@ -21,7 +21,7 @@ class JButtonHostAdapter : IHostAdapter<JButton> {
     val oldOnAction = oldProps?.getOrDefault("onAction", null) as Double?
     val newOnAction = newProps.getOrDefault("onAction", null) as Double?
 
-    if (oldOnAction !== null && oldOnAction !== newOnAction) {
+    if (oldOnAction !== null && oldOnAction != newOnAction) {
       bridge.freeCallback(oldOnAction)
     }
 
