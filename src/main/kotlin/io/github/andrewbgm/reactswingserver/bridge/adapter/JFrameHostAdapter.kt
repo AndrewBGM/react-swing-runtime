@@ -36,7 +36,7 @@ class JFrameHostAdapter : IHostAdapter<JFrame> {
     host.isVisible = true
   }
 
-  override fun insertBeforeInContainer(
+  override fun insertInContainerBefore(
     bridge: Bridge,
     host: JFrame,
     beforeChild: Container

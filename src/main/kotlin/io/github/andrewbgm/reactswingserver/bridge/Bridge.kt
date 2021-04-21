@@ -171,7 +171,7 @@ class Bridge(
 
     containerInstance.insertBefore(childInstance, beforeChildInstance)
 
-    childAdapter.insertBeforeInContainer(
+    childAdapter.insertInContainerBefore(
       this,
       childInstance.host,
       beforeChildInstance.host

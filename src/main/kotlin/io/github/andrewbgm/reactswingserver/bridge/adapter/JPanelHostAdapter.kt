@@ -32,7 +32,7 @@ class JPanelHostAdapter : IHostAdapter<JPanel> {
     host: JPanel
   ) = error("Cannot append $host to container")
 
-  override fun insertBeforeInContainer(
+  override fun insertInContainerBefore(
     bridge: Bridge,
     host: JPanel,
     beforeChild: Container

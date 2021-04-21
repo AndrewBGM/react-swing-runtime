@@ -27,7 +27,7 @@ interface IHostAdapter<T : Container> {
     host: T,
   )
 
-  fun insertBeforeInContainer(
+  fun insertInContainerBefore(
     bridge: Bridge,
     host: T,
     beforeChild: Container,

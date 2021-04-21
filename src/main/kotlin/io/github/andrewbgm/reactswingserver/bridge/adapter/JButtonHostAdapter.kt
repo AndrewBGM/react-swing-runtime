@@ -46,7 +46,7 @@ class JButtonHostAdapter : IHostAdapter<JButton> {
     host: JButton
   ) = error("Cannot append $host to container")
 
-  override fun insertBeforeInContainer(
+  override fun insertInContainerBefore(
     bridge: Bridge,
     host: JButton,
     beforeChild: Container
