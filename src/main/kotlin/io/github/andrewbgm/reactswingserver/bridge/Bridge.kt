@@ -205,7 +205,7 @@ class Bridge(
 
     if (started && containerInstance.children.isEmpty()) {
       ctx.session.close()
-      server.stop()
+      server.stop() // TODO: This is causing errors on shutdown.
     }
   }
 
