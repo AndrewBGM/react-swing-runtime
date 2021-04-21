@@ -1,10 +1,8 @@
 package io.github.andrewbgm.reactswingserver
 
-fun main() {
+import javax.swing.*
+
+fun main() = SwingUtilities.invokeLater {
   val server = ReactSwingServer()
   server.start(8080)
-
-  Runtime.getRuntime().addShutdownHook(Thread {
-    server.stop()
-  })
 }

@@ -2,7 +2,9 @@ package io.github.andrewbgm.reactswingserver.bridge
 
 import java.awt.*
 
-sealed class Instance {
+sealed class Instance(
+  open val id: Int,
+) {
   private val _children: MutableList<Instance> = mutableListOf()
   val children: List<Instance>
     get() = _children.toList()
@@ -29,8 +31,9 @@ sealed class Instance {
 }
 
 data class HostInstance(
+  override val id: Int,
   val host: Container,
-) : Instance() {
+) : Instance(id) {
   val text: String
     get() = children.filterIsInstance<TextInstance>()
       .joinToString("") { it.text }
@@ -56,10 +59,13 @@ data class HostInstance(
   }
 }
 
-object RootInstance : Instance()
+class RootInstance(
+  override val id: Int,
+) : Instance(id)
 
 data class TextInstance(
+  override val id: Int,
   var text: String,
-) : Instance() {
+) : Instance(id) {
   var parent: HostInstance? = null
 }

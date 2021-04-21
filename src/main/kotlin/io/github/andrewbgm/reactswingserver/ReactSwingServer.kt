@@ -125,6 +125,7 @@ class ReactSwingServer {
   }
 
   private fun configureBridge(): Bridge = Bridge(
+    this,
     JButton::class to JButtonHostAdapter(),
     JFrame::class to JFrameHostAdapter(),
     JPanel::class to JPanelHostAdapter()

@@ -2,6 +2,7 @@ package io.github.andrewbgm.reactswingserver.bridge.adapter
 
 import io.github.andrewbgm.reactswingserver.bridge.*
 import java.awt.*
+import java.awt.event.*
 import javax.swing.*
 
 class JFrameHostAdapter : IHostAdapter<JFrame> {
@@ -18,7 +19,25 @@ class JFrameHostAdapter : IHostAdapter<JFrame> {
     oldProps: Map<String, Any?>?,
     newProps: Map<String, Any?>
   ) {
+    host.defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
+
     host.title = newProps.getOrDefault("title", host.title) as String?
+
+    val oldOnClose = oldProps?.getOrDefault("onClose", null) as Double?
+    val newOnClose = newProps.getOrDefault("onClose", null) as Double?
+
+    if (oldOnClose !== null && oldOnClose != newOnClose) {
+      bridge.freeCallback(oldOnClose)
+    }
+
+    if (newOnClose !== null && oldOnClose != newOnClose) {
+      host.windowListeners.forEach { host.removeWindowListener(it) }
+      host.addWindowListener(object : WindowAdapter() {
+        override fun windowClosing(e: WindowEvent?) {
+          bridge.invokeCallback(newOnClose)
+        }
+      })
+    }
   }
 
   override fun applyText(

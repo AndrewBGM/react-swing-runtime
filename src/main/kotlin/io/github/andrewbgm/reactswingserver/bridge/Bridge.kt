@@ -1,5 +1,6 @@
 package io.github.andrewbgm.reactswingserver.bridge
 
+import io.github.andrewbgm.reactswingserver.*
 import io.github.andrewbgm.reactswingserver.bridge.adapter.*
 import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.websocket.*
@@ -7,6 +8,7 @@ import java.awt.*
 import kotlin.reflect.*
 
 class Bridge(
+  private val server: ReactSwingServer,
   vararg pairs: Pair<KClass<out Container>, IHostAdapter<out Container>>,
 ) {
   companion object {
@@ -18,6 +20,7 @@ class Bridge(
     }
   }
 
+  private var started = false
   private var _ctx: WsContext? = null
   private val ctx: WsContext
     get() = _ctx ?: error("No web-socket context configured for $this")
@@ -26,7 +29,7 @@ class Bridge(
   private val hostAdapterByTypeName: Map<String, IHostAdapter<out Container>> =
     hostAdapterByType.map { Pair(it.key.simpleName!!, it.value) }.toMap()
   private val instanceById: MutableMap<Int, Instance> = mutableMapOf(
-    0 to RootInstance
+    0 to RootInstance(0)
   )
 
   fun appendChild(
@@ -78,6 +81,8 @@ class Bridge(
     val containerInstance = findInstance<RootInstance>(containerId)
     containerInstance.children.filterIsInstance<HostInstance>().forEach {
       val adapter = findAdapter(it)
+      freeInstance(it)
+
       adapter.removeFromContainer(this, it.host)
     }
   }
@@ -114,14 +119,14 @@ class Bridge(
     val adapter = findAdapter(type)
     val host = adapter.create(this, props)
 
-    instanceById[instanceId] = HostInstance(host)
+    instanceById[instanceId] = HostInstance(instanceId, host)
   }
 
   fun createTextInstance(
     instanceId: Int,
     text: String,
   ) {
-    instanceById[instanceId] = TextInstance(text)
+    instanceById[instanceId] = TextInstance(instanceId, text)
   }
 
   fun freeCallback(
@@ -194,8 +199,14 @@ class Bridge(
     val childAdapter = findAdapter(childInstance)
 
     containerInstance -= childInstance
+    freeInstance(childInstance)
 
     childAdapter.removeFromContainer(this, childInstance.host)
+
+    if (started && containerInstance.children.isEmpty()) {
+      ctx.session.close()
+      server.stop()
+    }
   }
 
   fun removeChild(
@@ -207,6 +218,7 @@ class Bridge(
     val parentAdapter = findAdapter(parentInstance)
 
     parentInstance -= childInstance
+    freeInstance(childInstance)
 
     when (childInstance) {
       is HostInstance -> parentAdapter.removeChild(
@@ -224,7 +236,7 @@ class Bridge(
   }
 
   fun startApplication() {
-    // noop
+    started = true
   }
 
   private inline fun <reified T : Instance> findInstance(
@@ -238,6 +250,13 @@ class Bridge(
     }
 
     return instance
+  }
+
+  private fun freeInstance(
+    instance: Instance,
+  ) {
+    instanceById.remove(instance.id)
+    instance.children.forEach(::freeInstance)
   }
 
   @Suppress("UNCHECKED_CAST")
