@@ -125,7 +125,9 @@ class ReactSwingServer {
   }
 
   private fun configureBridge(): Bridge = Bridge(
-    JFrame::class to JFrameHostAdapter()
+    JButton::class to JButtonHostAdapter(),
+    JFrame::class to JFrameHostAdapter(),
+    JPanel::class to JPanelHostAdapter()
   )
 
   private fun configureGson() {

@@ -4,83 +4,72 @@ import io.github.andrewbgm.reactswingserver.bridge.*
 import java.awt.*
 import javax.swing.*
 
-class JFrameHostAdapter : IHostAdapter<JFrame> {
+class JPanelHostAdapter : IHostAdapter<JPanel> {
   override fun create(
     bridge: Bridge,
     props: Map<String, Any?>
-  ): JFrame = JFrame().also {
+  ): JPanel = JPanel().also {
     update(bridge, it, null, props)
   }
 
   override fun update(
     bridge: Bridge,
-    host: JFrame,
+    host: JPanel,
     oldProps: Map<String, Any?>?,
     newProps: Map<String, Any?>
   ) {
-    host.title = newProps.getOrDefault("title", host.title) as String?
+
   }
 
   override fun applyText(
     bridge: Bridge,
-    host: JFrame,
+    host: JPanel,
     text: String
   ) = error("Cannot apply text to $host")
 
   override fun appendToContainer(
     bridge: Bridge,
-    host: JFrame
-  ) {
-    host.pack()
-    host.setLocationRelativeTo(null)
-    host.isVisible = true
-  }
+    host: JPanel
+  ) = error("Cannot append $host to container")
 
   override fun insertBeforeInContainer(
     bridge: Bridge,
-    host: JFrame,
+    host: JPanel,
     beforeChild: Container
-  ) {
-    TODO("Not implemented yet")
-  }
+  ) = error("Cannot insert $host before $beforeChild in container")
 
   override fun removeFromContainer(
     bridge: Bridge,
-    host: JFrame
-  ) {
-    host.dispose()
-  }
+    host: JPanel
+  ) = error("Cannot remove $host from container")
 
   override fun appendChild(
     bridge: Bridge,
-    host: JFrame,
+    host: JPanel,
     child: Container
   ) {
-    /* TODO
-      Revisit this, might end up making sense for this to be
-      handled another way.
-    */
-    if (child is JMenuBar) {
-      host.jMenuBar = child
-    } else host.contentPane = child
+    host.add(child)
   }
 
   override fun insertBefore(
     bridge: Bridge,
-    host: JFrame,
+    host: JPanel,
     child: Container,
     beforeChild: Container
   ) {
-    appendChild(bridge, host, child)
+    if (host.components.contains(child)) {
+      host.remove(child)
+    }
+
+    val idx = host.components.indexOf(beforeChild)
+    host.add(child, idx)
   }
 
   override fun removeChild(
     bridge: Bridge,
-    host: JFrame,
+    host: JPanel,
     child: Container
   ) {
-    if (child is JMenuBar) {
-      host.jMenuBar = null
-    } else host.contentPane = null
+    host.remove(child)
   }
 }

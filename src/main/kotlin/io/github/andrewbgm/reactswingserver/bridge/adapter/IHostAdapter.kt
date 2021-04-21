@@ -16,6 +16,12 @@ interface IHostAdapter<T : Container> {
     newProps: Map<String, Any?>,
   )
 
+  fun applyText(
+    bridge: Bridge,
+    host: T,
+    text: String,
+  )
+
   fun appendToContainer(
     bridge: Bridge,
     host: T,
