@@ -1,8 +1,9 @@
 package io.github.andrewbgm.reactswingserver
 
-import javax.swing.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.swing.*
 
-fun main() = SwingUtilities.invokeLater {
+suspend fun main() = withContext(Dispatchers.Swing) {
   val server = ReactSwingServer()
   server.start(8080)
 }

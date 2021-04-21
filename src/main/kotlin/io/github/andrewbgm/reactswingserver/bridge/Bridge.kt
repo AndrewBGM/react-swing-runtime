@@ -80,6 +80,8 @@ class Bridge(
   ) {
     val containerInstance = findInstance<RootInstance>(containerId)
     containerInstance.children.filterIsInstance<HostInstance>().forEach {
+      containerInstance -= it
+
       val adapter = findAdapter(it)
       freeInstance(it)
 
@@ -205,7 +207,7 @@ class Bridge(
 
     if (started && containerInstance.children.isEmpty()) {
       ctx.session.close()
-      server.stop() // TODO: This is causing errors on shutdown.
+      // server.stop() // TODO: This is causing errors on shutdown.
     }
   }
 
