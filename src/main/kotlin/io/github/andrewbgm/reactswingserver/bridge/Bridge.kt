@@ -1,6 +1,5 @@
 package io.github.andrewbgm.reactswingserver.bridge
 
-import io.github.andrewbgm.reactswingserver.*
 import io.github.andrewbgm.reactswingserver.bridge.adapter.*
 import io.github.andrewbgm.reactswingserver.message.*
 import io.javalin.websocket.*
@@ -8,7 +7,6 @@ import java.awt.*
 import kotlin.reflect.*
 
 class Bridge(
-  private val server: ReactSwingServer,
   vararg pairs: Pair<KClass<out Container>, IHostAdapter<out Container>>,
 ) {
   companion object {
@@ -20,7 +18,6 @@ class Bridge(
     }
   }
 
-  private var started = false
   private var _ctx: WsContext? = null
   private val ctx: WsContext
     get() = _ctx ?: error("No web-socket context configured for $this")
@@ -36,7 +33,11 @@ class Bridge(
     parentId: Int,
     childId: Int,
   ) {
-    val parentInstance = findInstance<HostInstance>(parentId)
+    val parentInstance = findInstance<Instance>(parentId)
+    if (parentInstance !is HostInstance) {
+      return appendChildToContainer(parentId, childId)
+    }
+
     val childInstance = findInstance<Instance>(childId)
     val parentAdapter = findAdapter(parentInstance)
 
@@ -57,7 +58,7 @@ class Bridge(
     }
   }
 
-  fun appendChildToContainer(
+  private fun appendChildToContainer(
     containerId: Int,
     childId: Int,
   ) {
@@ -69,11 +70,6 @@ class Bridge(
 
     childAdapter.appendToContainer(this, childInstance.host)
   }
-
-  fun appendInitialChild(
-    parentId: Int,
-    childId: Int,
-  ) = appendChild(parentId, childId)
 
   fun clearContainer(
     containerId: Int,
@@ -142,7 +138,11 @@ class Bridge(
     childId: Int,
     beforeChildId: Int,
   ) {
-    val parentInstance = findInstance<HostInstance>(parentId)
+    val parentInstance = findInstance<Instance>(parentId)
+    if (parentInstance !is HostInstance) {
+      return insertInContainerBefore(parentId, childId, beforeChildId)
+    }
+
     val childInstance = findInstance<Instance>(childId)
     val beforeChildInstance = findInstance<Instance>(beforeChildId)
     val parentAdapter = findAdapter(parentInstance)
@@ -166,7 +166,7 @@ class Bridge(
     }
   }
 
-  fun insertInContainerBefore(
+  private fun insertInContainerBefore(
     containerId: Int,
     childId: Int,
     beforeChildId: Int,
@@ -192,30 +192,15 @@ class Bridge(
     ctx.send(InvokeCallbackMessage(callbackId.toInt(), args))
   }
 
-  fun removeChildFromContainer(
-    containerId: Int,
-    childId: Int,
-  ) {
-    val containerInstance = findInstance<RootInstance>(containerId)
-    val childInstance = findInstance<HostInstance>(childId)
-    val childAdapter = findAdapter(childInstance)
-
-    containerInstance -= childInstance
-    freeInstance(childInstance)
-
-    childAdapter.removeFromContainer(this, childInstance.host)
-
-    if (started && containerInstance.children.isEmpty()) {
-      ctx.session.close()
-      // server.stop() // TODO: This is causing errors on shutdown.
-    }
-  }
-
   fun removeChild(
     parentId: Int,
     childId: Int,
   ) {
-    val parentInstance = findInstance<HostInstance>(parentId)
+    val parentInstance = findInstance<Instance>(parentId)
+    if (parentInstance !is HostInstance) {
+      return removeChildFromContainer(parentId, childId)
+    }
+
     val childInstance = findInstance<Instance>(childId)
     val parentAdapter = findAdapter(parentInstance)
 
@@ -237,8 +222,23 @@ class Bridge(
     }
   }
 
-  fun startApplication() {
-    started = true
+  private fun removeChildFromContainer(
+    containerId: Int,
+    childId: Int,
+  ) {
+    val containerInstance = findInstance<RootInstance>(containerId)
+    val childInstance = findInstance<HostInstance>(childId)
+    val childAdapter = findAdapter(childInstance)
+
+    containerInstance -= childInstance
+    freeInstance(childInstance)
+
+    childAdapter.removeFromContainer(this, childInstance.host)
+
+    if (containerInstance.children.isEmpty()) {
+      ctx.session.close()
+      // server.stop() // TODO: This is causing errors on shutdown.
+    }
   }
 
   private inline fun <reified T : Instance> findInstance(

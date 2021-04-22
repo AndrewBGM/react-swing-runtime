@@ -34,6 +34,7 @@ class ReactSwingServer {
     Bridge.setContext(bridge, ctx)
 
     logger.info("Session #${ctx.sessionId} closed.")
+    stop()
   }
 
   private fun handleConnect(
@@ -62,14 +63,6 @@ class ReactSwingServer {
         message.parentId,
         message.childId
       )
-      is AppendChildToContainerMessage -> bridge.appendChildToContainer(
-        message.containerId,
-        message.childId
-      )
-      is AppendInitialChildMessage -> bridge.appendInitialChild(
-        message.parentId,
-        message.childId
-      )
       is ClearContainerMessage -> bridge.clearContainer(message.containerId)
       is CommitTextUpdateMessage -> bridge.commitTextUpdate(
         message.instanceId,
@@ -94,20 +87,10 @@ class ReactSwingServer {
         message.childId,
         message.beforeChildId
       )
-      is InsertInContainerBeforeMessage -> bridge.insertInContainerBefore(
-        message.containerId,
-        message.childId,
-        message.beforeChildId
-      )
-      is RemoveChildFromContainerMessage -> bridge.removeChildFromContainer(
-        message.containerId,
-        message.childId
-      )
       is RemoveChildMessage -> bridge.removeChild(
         message.parentId,
         message.childId
       )
-      is StartApplicationMessage -> bridge.startApplication()
       else -> error("Unsupported message: $message")
     }
   }
@@ -125,7 +108,6 @@ class ReactSwingServer {
   }
 
   private fun configureBridge(): Bridge = Bridge(
-    this,
     JButton::class to JButtonHostAdapter(),
     JFrame::class to JFrameHostAdapter(),
     JPanel::class to JPanelHostAdapter()
@@ -137,8 +119,6 @@ class ReactSwingServer {
       .registerTypeAdapter(
         IMessage::class.java, MessageAdapter(
           AppendChildMessage::class,
-          AppendChildToContainerMessage::class,
-          AppendInitialChildMessage::class,
           ClearContainerMessage::class,
           CommitTextUpdateMessage::class,
           CommitUpdateMessage::class,
@@ -146,11 +126,8 @@ class ReactSwingServer {
           CreateTextInstanceMessage::class,
           FreeCallbackMessage::class,
           InsertBeforeMessage::class,
-          InsertInContainerBeforeMessage::class,
           InvokeCallbackMessage::class,
-          RemoveChildFromContainerMessage::class,
           RemoveChildMessage::class,
-          StartApplicationMessage::class,
         )
       )
       .create()
