@@ -1,6 +1,12 @@
 package io.github.andrewbgm.reactswingserver
 
-suspend fun main() {
+import kotlinx.coroutines.*
+
+suspend fun main() = withContext(Dispatchers.Default) {
   val server = ReactSwingServer()
-  server.start(8080)
+    .start(8080)
+
+  Runtime.getRuntime().addShutdownHook(Thread {
+    server.stop()
+  })
 }
