@@ -5,7 +5,7 @@ import io.github.andrewbgm.reactswingserver.impl.messages.*
 
 class InsertBeforeMessageHandler : MessageHandler<InsertBeforeMessage> {
   override fun handleMessage(
-    message: InsertBeforeMessage,
+    message: InsertBeforeMessage
   ) {
     val (parentId, childId, beforeChildId) = message
 

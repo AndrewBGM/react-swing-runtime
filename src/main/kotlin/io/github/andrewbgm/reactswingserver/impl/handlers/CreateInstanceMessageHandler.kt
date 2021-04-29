@@ -5,7 +5,7 @@ import io.github.andrewbgm.reactswingserver.impl.messages.*
 
 class CreateInstanceMessageHandler : MessageHandler<CreateInstanceMessage> {
   override fun handleMessage(
-    message: CreateInstanceMessage,
+    message: CreateInstanceMessage
   ) {
     val (instanceId, type, props) = message
 

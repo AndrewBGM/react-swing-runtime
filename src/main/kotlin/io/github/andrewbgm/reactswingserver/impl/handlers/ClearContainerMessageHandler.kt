@@ -5,7 +5,7 @@ import io.github.andrewbgm.reactswingserver.impl.messages.*
 
 class ClearContainerMessageHandler : MessageHandler<ClearContainerMessage> {
   override fun handleMessage(
-    message: ClearContainerMessage,
+    message: ClearContainerMessage
   ) {
     val (instanceId) = message
 

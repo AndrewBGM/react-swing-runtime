@@ -5,7 +5,7 @@ import io.github.andrewbgm.reactswingserver.impl.messages.*
 
 class RemoveChildMessageHandler : MessageHandler<RemoveChildMessage> {
   override fun handleMessage(
-    message: RemoveChildMessage,
+    message: RemoveChildMessage
   ) {
     val (parentId, childId) = message
 

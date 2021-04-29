@@ -5,10 +5,10 @@ import io.github.andrewbgm.reactswingserver.impl.messages.*
 
 class CommitTextUpdateMessageHandler : MessageHandler<CommitTextUpdateMessage> {
   override fun handleMessage(
-    message: CommitTextUpdateMessage,
+    message: CommitTextUpdateMessage
   ) {
-    val (instanceId, text) = message
+    val (instanceId, oldText, newText) = message
 
-    println("commitTextUpdate($instanceId, $text)")
+    println("commitTextUpdate($instanceId, $oldText, $newText)")
   }
 }
