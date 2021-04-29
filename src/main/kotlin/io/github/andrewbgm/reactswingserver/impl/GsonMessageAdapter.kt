@@ -1,4 +1,4 @@
-package io.github.andrewbgm.reactswingserver.impl.gson
+package io.github.andrewbgm.reactswingserver.impl
 
 import com.google.gson.*
 import io.github.andrewbgm.reactswingserver.api.*
@@ -6,27 +6,17 @@ import java.lang.reflect.*
 import kotlin.reflect.*
 
 class GsonMessageAdapter : JsonDeserializer<Message>, JsonSerializer<Message> {
-  private val clazzByType: MutableMap<MessageType, KClass<out Message>> =
+  private val clazzByType: MutableMap<String, KClass<out Message>> =
     mutableMapOf()
-  private val typeByClazz: MutableMap<KClass<out Message>, MessageType> =
+  private val typeByClazz: MutableMap<KClass<out Message>, String> =
     mutableMapOf()
 
-  /**
-   * Registers a new message type
-   *
-   * @return current MessageBus for builder style pattern
-   */
   inline fun <reified T : Message> registerMessageType(
-    type: MessageType,
+    type: String,
   ): GsonMessageAdapter = registerMessageType(type, T::class)
 
-  /**
-   * Registers a new message type
-   *
-   * @return current MessageBus for builder style pattern
-   */
   fun registerMessageType(
-    type: MessageType,
+    type: String,
     clazz: KClass<out Message>,
   ): GsonMessageAdapter = this.apply {
     clazzByType[type] = clazz
@@ -36,19 +26,17 @@ class GsonMessageAdapter : JsonDeserializer<Message>, JsonSerializer<Message> {
   override fun deserialize(
     src: JsonElement,
     typeOfSrc: Type,
-    ctx: JsonDeserializationContext,
+    ctx: JsonDeserializationContext
   ): Message? {
-    if (src.isJsonNull) {
+    if (!src.isJsonObject) {
       return null
     }
 
     val obj = src.asJsonObject
     val type = obj.get("type").asString
     val payload = obj.get("payload").asJsonObject
-
-    val typeClazz = clazzByType.keys.find { it.toString() == type }
-      ?: error("$type is not a registered MessageType")
-    val clazz = clazzByType[typeClazz]!!
+    val clazz =
+      clazzByType[type] ?: error("$type is not a registered message type")
 
     return ctx.deserialize(payload, clazz.java)
   }
@@ -56,17 +44,17 @@ class GsonMessageAdapter : JsonDeserializer<Message>, JsonSerializer<Message> {
   override fun serialize(
     src: Message?,
     typeOfSrc: Type,
-    ctx: JsonSerializationContext,
+    ctx: JsonSerializationContext
   ): JsonElement {
     if (src == null) {
       return JsonNull.INSTANCE
     }
 
     val type =
-      typeByClazz[src::class] ?: error("$src is not a registered Message")
+      typeByClazz[src::class] ?: error("$src is not a registered message type")
 
     return JsonObject().apply {
-      addProperty("type", type.toString())
+      addProperty("type", type)
       add("payload", ctx.serialize(src))
     }
   }

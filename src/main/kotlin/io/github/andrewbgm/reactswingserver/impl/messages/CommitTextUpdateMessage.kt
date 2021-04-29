@@ -5,5 +5,6 @@ import io.github.andrewbgm.reactswingserver.api.*
 
 data class CommitTextUpdateMessage(
   @Expose val instanceId: Number,
-  @Expose val text: String,
+  @Expose val oldText: String,
+  @Expose val newText: String
 ) : Message

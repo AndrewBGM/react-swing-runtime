@@ -5,5 +5,5 @@ import io.github.andrewbgm.reactswingserver.api.*
 
 data class CreateTextInstanceMessage(
   @Expose val instanceId: Number,
-  @Expose val text: String,
+  @Expose val text: String
 ) : Message

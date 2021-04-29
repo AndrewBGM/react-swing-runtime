@@ -26,7 +26,7 @@ dependencies {
 
   implementation("org.slf4j:slf4j-simple:1.7.30")
   implementation("com.google.code.gson:gson:2.8.6")
-  implementation("io.javalin:javalin:3.13.4")
+  implementation("io.javalin:javalin:3.13.6")
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit"))

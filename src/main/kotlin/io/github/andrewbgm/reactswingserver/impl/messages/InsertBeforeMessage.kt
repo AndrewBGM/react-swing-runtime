@@ -6,5 +6,5 @@ import io.github.andrewbgm.reactswingserver.api.*
 data class InsertBeforeMessage(
   @Expose val parentId: Number,
   @Expose val childId: Number,
-  @Expose val beforeChildId: Number,
+  @Expose val beforeChildId: Number
 ) : Message

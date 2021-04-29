@@ -5,5 +5,5 @@ import io.github.andrewbgm.reactswingserver.api.*
 
 data class RemoveChildMessage(
   @Expose val parentId: Number,
-  @Expose val childId: Number,
+  @Expose val childId: Number
 ) : Message

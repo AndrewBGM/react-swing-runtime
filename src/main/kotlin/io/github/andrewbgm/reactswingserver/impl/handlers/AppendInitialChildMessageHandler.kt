@@ -6,7 +6,7 @@ import io.github.andrewbgm.reactswingserver.impl.messages.*
 class AppendInitialChildMessageHandler :
   MessageHandler<AppendInitialChildMessage> {
   override fun handleMessage(
-    message: AppendInitialChildMessage,
+    message: AppendInitialChildMessage
   ) {
     val (parentId, childId) = message
 

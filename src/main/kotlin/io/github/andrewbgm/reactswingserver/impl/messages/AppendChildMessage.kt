@@ -5,5 +5,5 @@ import io.github.andrewbgm.reactswingserver.api.*
 
 data class AppendChildMessage(
   @Expose val parentId: Number,
-  @Expose val childId: Number,
+  @Expose val childId: Number
 ) : Message

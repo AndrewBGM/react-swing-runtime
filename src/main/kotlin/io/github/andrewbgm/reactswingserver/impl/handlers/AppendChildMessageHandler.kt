@@ -5,7 +5,7 @@ import io.github.andrewbgm.reactswingserver.impl.messages.*
 
 class AppendChildMessageHandler : MessageHandler<AppendChildMessage> {
   override fun handleMessage(
-    message: AppendChildMessage,
+    message: AppendChildMessage
   ) {
     val (parentId, childId) = message
 

@@ -6,5 +6,5 @@ import io.github.andrewbgm.reactswingserver.api.*
 data class InsertInContainerBeforeMessage(
   @Expose val parentId: Number,
   @Expose val childId: Number,
-  @Expose val beforeChildId: Number,
+  @Expose val beforeChildId: Number
 ) : Message
