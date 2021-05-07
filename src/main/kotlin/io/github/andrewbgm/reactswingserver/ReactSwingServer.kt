@@ -72,6 +72,7 @@ class ReactSwingServer {
    */
   private fun configureGson(): Gson = GsonBuilder()
     .excludeFieldsWithoutExposeAnnotation()
+    .registerTypeAdapter(IMessage::class.java, messageAdapter)
     .create().also(::configureJsonMapping)
 
   /**
