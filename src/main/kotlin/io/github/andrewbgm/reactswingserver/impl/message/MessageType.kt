@@ -13,6 +13,6 @@ enum class MessageType : IMessageType {
   SET_CHILDREN,
   APPEND_CHILD,
   REMOVE_CHILD,
-  INSERT_CHILD_BEFORE,
+  INSERT_CHILD,
   INVOKE_CALLBACK
 }
