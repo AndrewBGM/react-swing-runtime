@@ -2,81 +2,87 @@ package io.github.andrewbgm.reactswingserver
 
 import com.google.gson.*
 import io.github.andrewbgm.reactswingserver.api.*
-import io.github.andrewbgm.reactswingserver.impl.*
-import io.github.andrewbgm.reactswingserver.impl.handlers.*
-import io.github.andrewbgm.reactswingserver.impl.messages.*
+import io.github.andrewbgm.reactswingserver.impl.message.*
 import io.javalin.*
 import io.javalin.plugin.json.*
 import io.javalin.websocket.*
+import kotlin.reflect.*
 
+/**
+ * Provides utilities for managing a Javalin server instance
+ * configured for React Swing.
+ */
 class ReactSwingServer {
-  private val gson: Gson = configureGson()
-  private val messageBus: MessageBus = configureMessageBus()
+  /**
+   * Configured Javalin instance.
+   */
+  private val app = configureApp()
 
-  private val app: Javalin by lazy(::configureApp)
+  /**
+   * Configured Gson instance
+   */
+  private val gson = configureGson()
 
+  /**
+   * Message adapter instance.
+   */
+  private val messageAdapter = MessageAdapter()
+
+  /**
+   * Message bus instance.
+   */
+  private val messageBus = MessageBus()
+
+  fun <T : IMessage> registerMessage(
+    type: IMessageType,
+    clazz: KClass<T>,
+    handler: IMessageHandler<T>? = null
+  ): ReactSwingServer = this.apply {
+    messageAdapter.registerType(type, clazz)
+    handler?.let {
+      messageBus.subscribe(clazz, it)
+    }
+  }
+
+  /**
+   * Synchronously starts the server.
+   */
   fun start(
     port: Int,
   ): ReactSwingServer = this.apply {
     app.start(port)
   }
 
+  /**
+   * Synchronously stops the server.
+   */
   fun stop(): ReactSwingServer = this.apply {
     app.stop()
   }
 
-  private fun configureApp(): Javalin =
-    Javalin.create()
-      .ws("/") { ws ->
-        ws.onConnect(::handleConnect)
-        ws.onMessage(::handleMessage)
-        ws.onClose(::handleClose)
-        ws.onError(::handleError)
-      }
+  /**
+   * Configures a new Javalin instance and returns it.
+   */
+  private fun configureApp(): Javalin = Javalin.create()
+    .ws("/") { ws ->
+      ws.onMessage(::handleMessage)
+    }
 
-  private fun handleConnect(
-    ctx: WsConnectContext
+  /**
+   * Configures a new Gson instance and returns it.
+   */
+  private fun configureGson(): Gson = GsonBuilder()
+    .excludeFieldsWithoutExposeAnnotation()
+    .create().also(::configureJsonMapping)
+
+  /**
+   * Configures Javalin JSON mapping for use with Gson.
+   *
+   * @param gson Gson instance.
+   */
+  private fun configureJsonMapping(
+    gson: Gson
   ) {
-
-  }
-
-  private fun handleMessage(
-    ctx: WsMessageContext
-  ) {
-    val message = ctx.message<Message>()
-    messageBus.handleMessage(message)
-  }
-
-  private fun handleClose(ctx: WsCloseContext) {
-
-  }
-
-  private fun handleError(
-    ctx: WsErrorContext
-  ) {
-
-  }
-
-  private fun configureGson(): Gson {
-    val gson = GsonBuilder()
-      .excludeFieldsWithoutExposeAnnotation()
-      .registerTypeAdapter(
-        Message::class.java, GsonMessageAdapter()
-          .registerMessageType<AppendChildMessage>("APPEND_CHILD")
-          .registerMessageType<AppendChildToContainerMessage>("APPEND_CHILD_TO_CONTAINER")
-          .registerMessageType<AppendInitialChildMessage>("APPEND_INITIAL_CHILD")
-          .registerMessageType<ClearContainerMessage>("CLEAR_CONTAINER")
-          .registerMessageType<CommitTextUpdateMessage>("COMMIT_TEXT_UPDATE")
-          .registerMessageType<CommitUpdateMessage>("COMMIT_UPDATE")
-          .registerMessageType<CreateInstanceMessage>("CREATE_INSTANCE")
-          .registerMessageType<CreateTextInstanceMessage>("CREATE_TEXT_INSTANCE")
-          .registerMessageType<InsertBeforeMessage>("INSERT_BEFORE")
-          .registerMessageType<InsertInContainerBeforeMessage>("INSERT_IN_CONTAINER_BEFORE")
-          .registerMessageType<RemoveChildFromContainerMessage>("REMOVE_CHILD_FROM_CONTAINER")
-          .registerMessageType<RemoveChildMessage>("REMOVE_CHILD")
-      )
-      .create()
-
     JavalinJson.fromJsonMapper = object : FromJsonMapper {
       override fun <T> map(
         json: String,
@@ -87,26 +93,22 @@ class ReactSwingServer {
     JavalinJson.toJsonMapper = object : ToJsonMapper {
       override fun map(
         obj: Any
-      ): String = if (obj is Message) gson.toJson(
+      ): String = if (obj is IMessage) gson.toJson(
         obj,
-        Message::class.java
+        IMessage::class.java
       ) else gson.toJson(obj)
     }
-
-    return gson
   }
 
-  private fun configureMessageBus(): MessageBus = MessageBus()
-    .registerMessageHandler(AppendChildMessageHandler())
-    .registerMessageHandler(AppendChildToContainerMessageHandler())
-    .registerMessageHandler(AppendInitialChildMessageHandler())
-    .registerMessageHandler(ClearContainerMessageHandler())
-    .registerMessageHandler(CommitTextUpdateMessageHandler())
-    .registerMessageHandler(CommitUpdateMessageHandler())
-    .registerMessageHandler(CreateInstanceMessageHandler())
-    .registerMessageHandler(CreateTextInstanceMessageHandler())
-    .registerMessageHandler(InsertBeforeMessageHandler())
-    .registerMessageHandler(InsertInContainerBeforeMessageHandler())
-    .registerMessageHandler(RemoveChildFromContainerMessageHandler())
-    .registerMessageHandler(RemoveChildMessageHandler())
+  /**
+   * Reads and dispatches incoming messages.
+   *
+   * @param ctx Message context.
+   */
+  private fun handleMessage(
+    ctx: WsMessageContext
+  ) {
+    val message = ctx.message<IMessage>()
+    messageBus.publish(message)
+  }
 }
