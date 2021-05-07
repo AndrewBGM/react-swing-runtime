@@ -19,11 +19,6 @@ class ReactSwingServer {
   private val app = configureApp()
 
   /**
-   * Configured Gson instance
-   */
-  private val gson = configureGson()
-
-  /**
    * Message adapter instance.
    */
   private val messageAdapter = MessageAdapter()
@@ -32,6 +27,10 @@ class ReactSwingServer {
    * Message bus instance.
    */
   private val messageBus = MessageBus()
+
+  init {
+    configureGson()
+  }
 
   fun <T : IMessage> registerMessage(
     type: IMessageType,

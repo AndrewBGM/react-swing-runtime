@@ -1,3 +1,6 @@
 package io.github.andrewbgm.reactswingserver.api
 
-interface Message
+/**
+ * Message.
+ */
+interface IMessage
