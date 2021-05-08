@@ -1,4 +1,4 @@
-package io.github.andrewbgm.reactswingruntime.impl
+package io.github.andrewbgm.reactswingruntime.impl.message
 
 import com.google.gson.*
 import io.github.andrewbgm.reactswingruntime.api.*

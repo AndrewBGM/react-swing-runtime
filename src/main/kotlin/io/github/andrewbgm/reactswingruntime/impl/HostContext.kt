@@ -1,7 +1,7 @@
 package io.github.andrewbgm.reactswingruntime.impl
 
 import io.github.andrewbgm.reactswingruntime.api.*
-import io.github.andrewbgm.reactswingruntime.impl.messages.*
+import io.github.andrewbgm.reactswingruntime.impl.message.messages.*
 
 class HostContext(
   private val id: String,

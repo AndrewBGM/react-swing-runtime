@@ -5,7 +5,8 @@ import io.github.andrewbgm.reactswingruntime.api.*
 import io.github.andrewbgm.reactswingruntime.impl.*
 import io.github.andrewbgm.reactswingruntime.impl.adapters.*
 import io.github.andrewbgm.reactswingruntime.impl.handlers.*
-import io.github.andrewbgm.reactswingruntime.impl.messages.*
+import io.github.andrewbgm.reactswingruntime.impl.message.*
+import io.github.andrewbgm.reactswingruntime.impl.message.messages.*
 import io.javalin.*
 import io.javalin.plugin.json.*
 import io.javalin.websocket.*
@@ -24,7 +25,11 @@ class ReactSwingRuntime {
     registerHostType(HostType.BUTTON, ButtonHostAdapter())
     registerHostType(HostType.FRAME, FrameHostAdapter())
     registerHostType(HostType.LABEL, LabelHostAdapter())
+    registerHostType(HostType.MENU, MenuHostAdapter())
+    registerHostType(HostType.MENU_BAR, MenuBarHostAdapter())
+    registerHostType(HostType.MENU_ITEM, MenuItemHostAdapter())
     registerHostType(HostType.PANEL, PanelHostAdapter())
+    registerHostType(HostType.TEXT_FIELD, TextFieldHostAdapter())
 
     registerMessageType(MessageType.CREATE_VIEW, CreateViewMessageHandler(hostEnvironment))
     registerMessageType(MessageType.UPDATE_VIEW, UpdateViewMessageHandler(hostEnvironment))

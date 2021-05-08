@@ -1,20 +1,39 @@
 package io.github.andrewbgm.reactswingruntime.impl.adapters
 
 import io.github.andrewbgm.reactswingruntime.api.*
-import io.github.andrewbgm.reactswingruntime.impl.*
-import java.awt.*
 import javax.swing.*
+import javax.swing.event.*
 
-class PanelHostAdapter : IHostAdapter<JPanel> {
+class TextFieldHostAdapter : IHostAdapter<JTextField> {
   override fun create(
     props: Map<String, Any?>,
     ctx: IHostContext
-  ): JPanel = JPanel().apply {
+  ): JTextField = JTextField().apply {
+    text = props.getOrDefault("defaultValue", text) as String?
+
+    document.addDocumentListener(object : DocumentListener {
+      override fun insertUpdate(
+        e: DocumentEvent
+      ) = handleChange()
+
+      override fun removeUpdate(
+        e: DocumentEvent
+      ) = handleChange()
+
+      override fun changedUpdate(
+        e: DocumentEvent
+      ) = handleChange()
+
+      private fun handleChange() {
+        ctx.invokeCallback("onChange", listOf(text))
+      }
+    })
+
     update(this, props, ctx)
   }
 
   override fun update(
-    host: JPanel,
+    host: JTextField,
     changedProps: Map<String, Any?>,
     ctx: IHostContext
   ) = with(host) {
@@ -22,55 +41,42 @@ class PanelHostAdapter : IHostAdapter<JPanel> {
   }
 
   override fun setChildren(
-    host: JPanel,
+    host: JTextField,
     children: List<Any>,
     ctx: IHostContext
-  ) = children.forEach { appendChild(host, it, ctx) }
+  ) = error("Cannot set children for $host")
 
   override fun appendChild(
-    host: JPanel,
+    host: JTextField,
     child: Any,
     ctx: IHostContext
-  ) {
-    when (child) {
-      is Container -> host.add(child)
-      else -> error("Cannot append $child to $host")
-    }
-  }
+  ) = error("Cannot append $child to $host")
 
   override fun appendToContainer(
-    host: JPanel,
+    host: JTextField,
     ctx: IHostContext
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
-    host: JPanel,
+    host: JTextField,
     child: Any,
     ctx: IHostContext
-  ) = when (child) {
-    is Container -> host.remove(child)
-    else -> error("Cannot append $child to $host")
-  }
+  ) = error("Cannot remove $child from $host")
 
   override fun removeFromContainer(
-    host: JPanel,
+    host: JTextField,
     ctx: IHostContext
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
-    host: JPanel,
+    host: JTextField,
     child: Any,
     beforeChild: Any,
     ctx: IHostContext
-  ) {
-    when {
-      child is Container && beforeChild is Container -> host.insertBefore(child, beforeChild)
-      else -> error("Cannot append $child to $host")
-    }
-  }
+  ) = error("Cannot insert $child in $host before $beforeChild")
 
   override fun insertInContainer(
-    host: JPanel,
+    host: JTextField,
     beforeChild: Any,
     ctx: IHostContext
   ) = error("Cannot insert $host in container before $beforeChild")

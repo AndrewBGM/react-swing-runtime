@@ -40,12 +40,10 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
     host: JFrame,
     child: Any,
     ctx: IHostContext
-  ) {
-    when (child) {
-      is JMenuBar -> host.jMenuBar = child
-      is Container -> host.contentPane = child
-      else -> error("Cannot append $child to $host")
-    }
+  ) = when (child) {
+    is JMenuBar -> host.jMenuBar = child
+    is Container -> host.contentPane = child
+    else -> error("Cannot append $child to $host")
   }
 
   override fun appendToContainer(
@@ -63,12 +61,10 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
     host: JFrame,
     child: Any,
     ctx: IHostContext
-  ) {
-    when (child) {
-      is JMenuBar -> host.jMenuBar = null
-      is Container -> host.contentPane = null
-      else -> error("Cannot append $child to $host")
-    }
+  ) = when (child) {
+    is JMenuBar -> host.jMenuBar = null
+    is Container -> host.contentPane = null
+    else -> error("Cannot append $child to $host")
   }
 
   override fun removeFromContainer(
@@ -83,12 +79,10 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
     child: Any,
     beforeChild: Any,
     ctx: IHostContext
-  ) {
-    when (child) {
-      is JMenuBar -> host.jMenuBar = child
-      is Container -> host.contentPane = child
-      else -> error("Cannot insert $child in $host before $beforeChild")
-    }
+  ) = when (child) {
+    is JMenuBar -> host.jMenuBar = child
+    is Container -> host.contentPane = child
+    else -> error("Cannot insert $child in $host before $beforeChild")
   }
 
   override fun insertInContainer(

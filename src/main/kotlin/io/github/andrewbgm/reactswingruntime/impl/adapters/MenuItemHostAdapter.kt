@@ -1,76 +1,65 @@
 package io.github.andrewbgm.reactswingruntime.impl.adapters
 
 import io.github.andrewbgm.reactswingruntime.api.*
-import io.github.andrewbgm.reactswingruntime.impl.*
-import java.awt.*
 import javax.swing.*
 
-class PanelHostAdapter : IHostAdapter<JPanel> {
+class MenuItemHostAdapter : IHostAdapter<JMenuItem> {
   override fun create(
     props: Map<String, Any?>,
     ctx: IHostContext
-  ): JPanel = JPanel().apply {
+  ): JMenuItem = JMenuItem().apply {
+    addActionListener {
+      ctx.invokeCallback("onAction")
+    }
+
     update(this, props, ctx)
   }
 
   override fun update(
-    host: JPanel,
+    host: JMenuItem,
     changedProps: Map<String, Any?>,
     ctx: IHostContext
   ) = with(host) {
-    // noop
+    text = changedProps.getOrDefault("children", text) as String?
   }
 
   override fun setChildren(
-    host: JPanel,
+    host: JMenuItem,
     children: List<Any>,
     ctx: IHostContext
-  ) = children.forEach { appendChild(host, it, ctx) }
+  ) = error("Cannot set children for $host")
 
   override fun appendChild(
-    host: JPanel,
+    host: JMenuItem,
     child: Any,
     ctx: IHostContext
-  ) {
-    when (child) {
-      is Container -> host.add(child)
-      else -> error("Cannot append $child to $host")
-    }
-  }
+  ) = error("Cannot append $child to $host")
 
   override fun appendToContainer(
-    host: JPanel,
+    host: JMenuItem,
     ctx: IHostContext
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
-    host: JPanel,
+    host: JMenuItem,
     child: Any,
     ctx: IHostContext
-  ) = when (child) {
-    is Container -> host.remove(child)
-    else -> error("Cannot append $child to $host")
-  }
+  ) = error("Cannot remove $child from $host")
 
   override fun removeFromContainer(
-    host: JPanel,
+    host: JMenuItem,
     ctx: IHostContext
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
-    host: JPanel,
+    host: JMenuItem,
     child: Any,
     beforeChild: Any,
     ctx: IHostContext
-  ) {
-    when {
-      child is Container && beforeChild is Container -> host.insertBefore(child, beforeChild)
-      else -> error("Cannot append $child to $host")
-    }
-  }
+  ) = error("Cannot insert $child in $host before $beforeChild")
 
   override fun insertInContainer(
-    host: JPanel,
+    host: JMenuItem,
     beforeChild: Any,
     ctx: IHostContext
   ) = error("Cannot insert $host in container before $beforeChild")

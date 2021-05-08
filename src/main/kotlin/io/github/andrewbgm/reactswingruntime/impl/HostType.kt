@@ -6,5 +6,9 @@ enum class HostType : IHostType {
   BUTTON,
   FRAME,
   LABEL,
+  MENU,
+  MENU_BAR,
+  MENU_ITEM,
   PANEL,
+  TEXT_FIELD
 }
