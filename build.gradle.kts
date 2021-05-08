@@ -25,9 +25,9 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.5.0-RC")
 
 //  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0")
-  implementation("org.slf4j:slf4j-simple:1.7.30")
-  implementation("com.google.code.gson:gson:2.8.6")
-  implementation("io.javalin:javalin:3.13.6")
+//  implementation("org.slf4j:slf4j-simple:1.7.30")
+//  implementation("com.google.code.gson:gson:2.8.6")
+//  implementation("io.javalin:javalin:3.13.6")
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit"))
@@ -43,7 +43,7 @@ publishing {
   repositories {
     maven {
       name = "GitHubPackages"
-      url = uri("https://maven.pkg.github.com/andrewbgm/react-swing-server")
+      url = uri("https://maven.pkg.github.com/andrewbgm/react-swing-runtime")
       credentials {
         username = findProperty("gpr.user", "USERNAME")
         password = findProperty("gpr.key", "TOKEN")
@@ -53,7 +53,7 @@ publishing {
 
   publications {
     create<MavenPublication>("mavenJava") {
-      artifactId = "react-swing-server"
+      artifactId = "react-swing-runtime"
       from(components["java"])
     }
   }
@@ -61,5 +61,5 @@ publishing {
 
 tasks.register<JavaExec>("sample") {
   classpath = sourceSets.test.get().runtimeClasspath
-  main = "io.github.andrewbgm.reactswingserver.ReactSwingServerTestKt"
+  main = "io.github.andrewbgm.reactswingruntime.ReactSwingRuntimeSampleKt"
 }

@@ -1,12 +1,12 @@
-# react-swing-server
+# react-swing-runtime
 
 A framework for building Java Swing apps with React.
 
 ## Building locally
 
 ```
-git clone git@github.com:AndrewBGM/react-swing-server.git
-cd react-swing-server
+git clone git@github.com:AndrewBGM/react-swing-runtime.git
+cd react-swing-runtime
 gradlew build
 ```
 
