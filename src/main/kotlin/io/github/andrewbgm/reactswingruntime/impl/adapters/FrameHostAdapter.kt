@@ -55,6 +55,8 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
     host.pack()
     host.setLocationRelativeTo(null)
     host.isVisible = true
+    host.state = JFrame.ICONIFIED
+    host.state = JFrame.NORMAL
   }
 
   override fun removeChild(
