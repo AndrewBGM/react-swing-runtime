@@ -9,7 +9,7 @@ class TextFieldHostAdapter : IHostAdapter<JTextField> {
     props: Map<String, Any?>,
     ctx: IHostContext
   ): JTextField = JTextField().apply {
-    text = props.getOrDefault("defaultValue", text) as String?
+    text = props.getOrDefault("initialValue", text) as String?
 
     document.addDocumentListener(object : DocumentListener {
       override fun insertUpdate(
