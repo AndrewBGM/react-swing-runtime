@@ -1,5 +1,5 @@
 package io.github.andrewbgm.reactswingruntime.api
 
-interface IHostType {
+interface IMessageType {
   val name: String
 }

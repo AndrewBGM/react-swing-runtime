@@ -1,5 +1,10 @@
 package io.github.andrewbgm.reactswingruntime
 
-suspend fun main() {
+fun main() {
+  val runtime = ReactSwingRuntime()
+    .start(8080)
 
+  Runtime.getRuntime().addShutdownHook(Thread {
+    runtime.stop()
+  })
 }

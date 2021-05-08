@@ -21,13 +21,12 @@ dependencies {
   implementation(platform(kotlin("bom")))
   implementation(kotlin("stdlib-jdk8"))
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.5.0-RC")
+//  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC")
+//  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.5.0-RC")
 
-//  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0")
-//  implementation("org.slf4j:slf4j-simple:1.7.30")
-//  implementation("com.google.code.gson:gson:2.8.6")
-//  implementation("io.javalin:javalin:3.13.6")
+  implementation("org.slf4j:slf4j-simple:1.7.30")
+  implementation("com.google.code.gson:gson:2.8.6")
+  implementation("io.javalin:javalin:3.13.6")
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit"))
