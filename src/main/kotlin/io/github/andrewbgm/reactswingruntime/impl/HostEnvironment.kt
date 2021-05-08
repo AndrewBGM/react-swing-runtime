@@ -9,6 +9,7 @@ class HostEnvironment {
   private val adapterByTypeName = mutableMapOf<String, IHostAdapter<out Any>>()
   private val hostTypeById = mutableMapOf<String, IHostType>()
   private val hostById = mutableMapOf<String, Any>()
+  private val childrenById = mutableMapOf<String, List<String>>()
 
   fun createView(
     id: String,
@@ -39,9 +40,9 @@ class HostEnvironment {
     childrenIds: List<String>,
     ctx: IHostContext
   ) = SwingUtilities.invokeLater {
-    if (parentId == ROOT_CONTAINER_ID) {
-      // TODO: This seems to only be used for clearing on startup.
-    } else {
+    childrenById[parentId] = childrenIds
+
+    if (parentId != ROOT_CONTAINER_ID) {
       val parentHost = findHostView(parentId)
       val parentType = findHostType(parentId)
 
@@ -58,6 +59,9 @@ class HostEnvironment {
     ctx: IHostContext
   ) = SwingUtilities.invokeLater {
     val childHost = findHostView(childId)
+
+    val children = childrenById.getOrPut(parentId) { listOf() }
+    childrenById[parentId] = children + childId
 
     if (parentId == ROOT_CONTAINER_ID) {
       val childType = findHostType(childId)
@@ -80,6 +84,9 @@ class HostEnvironment {
   ) = SwingUtilities.invokeLater {
     val childHost = findHostView(childId)
 
+    val children = childrenById.getOrPut(parentId) { listOf() }
+    childrenById[parentId] = children - childId
+
     if (parentId == ROOT_CONTAINER_ID) {
       val childType = findHostType(childId)
 
@@ -92,6 +99,8 @@ class HostEnvironment {
       val parentAdapter = findAdapter(parentType)
       parentAdapter.removeChild(parentHost, childHost, ctx)
     }
+
+    removeHostReferences(childId)
   }
 
   fun insertChild(
@@ -102,6 +111,17 @@ class HostEnvironment {
   ) = SwingUtilities.invokeLater {
     val childHost = findHostView(childId)
     val beforeChildHost = findHostView(beforeChildId)
+
+    val existingChildren = childrenById.getOrPut(parentId) { listOf() }
+      .toMutableList()
+
+    if (existingChildren.contains(childId)) {
+      existingChildren -= childId
+    }
+
+    val idx = existingChildren.indexOf(beforeChildId)
+    existingChildren.add(idx, childId)
+    childrenById[parentId] = existingChildren.toList()
 
     if (parentId == ROOT_CONTAINER_ID) {
       val childType = findHostType(childId)
@@ -125,6 +145,15 @@ class HostEnvironment {
     require(!adapterByTypeName.containsKey(typeName)) { "$type already has an associated IHostAdapter" }
 
     adapterByTypeName[typeName] = adapter
+  }
+
+  private fun removeHostReferences(
+    id: String
+  ) {
+    childrenById[id]?.forEach(::removeHostReferences)
+    childrenById.remove(id)
+    hostById.remove(id)
+    hostTypeById.remove(id)
   }
 
   @Suppress("UNCHECKED_CAST")

@@ -10,7 +10,6 @@ import io.javalin.*
 import io.javalin.plugin.json.*
 import io.javalin.websocket.*
 import kotlin.reflect.*
-import kotlin.system.*
 
 class ReactSwingRuntime {
   private val app by lazy(::configureApp)
@@ -80,7 +79,7 @@ class ReactSwingRuntime {
   private fun configureApp(): Javalin = Javalin.create()
     .ws("/") {
       it.onMessage(::handleMessage)
-      it.onClose { exitProcess(0) }
+      it.onClose { Thread { stop() }.start() }
     }
 
   private fun configureGson(): Gson = GsonBuilder()
