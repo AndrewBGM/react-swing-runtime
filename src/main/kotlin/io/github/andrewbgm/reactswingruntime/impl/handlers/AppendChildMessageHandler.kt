@@ -5,11 +5,11 @@ import io.github.andrewbgm.reactswingruntime.impl.*
 import io.github.andrewbgm.reactswingruntime.impl.message.messages.*
 
 class AppendChildMessageHandler(
-  private val env: HostEnvironment
+  private val env: HostEnvironment,
 ) : IMessageHandler<AppendChildMessage> {
   override fun handleMessage(
     message: AppendChildMessage,
-    ctx: IMessageContext
+    ctx: IMessageContext,
   ) {
     val (parentId, childId) = message
     env.appendChild(parentId, childId, HostContext(parentId, ctx))

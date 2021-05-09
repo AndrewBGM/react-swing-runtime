@@ -5,7 +5,7 @@ import javax.swing.*
 
 fun Container.insertBefore(
   child: Container,
-  beforeChild: Container
+  beforeChild: Container,
 ) {
   if (this is JMenu) {
     if (menuComponents.contains(child)) {

@@ -5,5 +5,5 @@ import io.github.andrewbgm.reactswingruntime.api.*
 
 data class RemoveChildMessage(
   @Expose val parentId: String,
-  @Expose val childId: String
+  @Expose val childId: String,
 ) : IMessage

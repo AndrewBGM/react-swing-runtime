@@ -8,7 +8,7 @@ import javax.swing.*
 class PanelHostAdapter : IHostAdapter<JPanel> {
   override fun create(
     props: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ): JPanel = JPanel().apply {
     update(this, props, ctx)
   }
@@ -16,7 +16,7 @@ class PanelHostAdapter : IHostAdapter<JPanel> {
   override fun update(
     host: JPanel,
     changedProps: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = with(host) {
     // noop
   }
@@ -24,13 +24,13 @@ class PanelHostAdapter : IHostAdapter<JPanel> {
   override fun setChildren(
     host: JPanel,
     children: List<Any>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = children.forEach { appendChild(host, it, ctx) }
 
   override fun appendChild(
     host: JPanel,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     when (child) {
       is Container -> host.add(child)
@@ -40,13 +40,13 @@ class PanelHostAdapter : IHostAdapter<JPanel> {
 
   override fun appendToContainer(
     host: JPanel,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
     host: JPanel,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = when (child) {
     is Container -> host.remove(child)
     else -> error("Cannot append $child to $host")
@@ -54,14 +54,14 @@ class PanelHostAdapter : IHostAdapter<JPanel> {
 
   override fun removeFromContainer(
     host: JPanel,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
     host: JPanel,
     child: Any,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     when {
       child is Container && beforeChild is Container -> host.insertBefore(child, beforeChild)
@@ -72,6 +72,6 @@ class PanelHostAdapter : IHostAdapter<JPanel> {
   override fun insertInContainer(
     host: JPanel,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot insert $host in container before $beforeChild")
 }

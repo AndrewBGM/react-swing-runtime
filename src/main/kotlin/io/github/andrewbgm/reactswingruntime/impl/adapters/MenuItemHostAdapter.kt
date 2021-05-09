@@ -6,7 +6,7 @@ import javax.swing.*
 class MenuItemHostAdapter : IHostAdapter<JMenuItem> {
   override fun create(
     props: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ): JMenuItem = JMenuItem().apply {
     addActionListener {
       ctx.invokeCallback("onAction")
@@ -18,7 +18,7 @@ class MenuItemHostAdapter : IHostAdapter<JMenuItem> {
   override fun update(
     host: JMenuItem,
     changedProps: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = with(host) {
     text = changedProps.getOrDefault("children", text) as String?
   }
@@ -26,41 +26,41 @@ class MenuItemHostAdapter : IHostAdapter<JMenuItem> {
   override fun setChildren(
     host: JMenuItem,
     children: List<Any>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot set children for $host")
 
   override fun appendChild(
     host: JMenuItem,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot append $child to $host")
 
   override fun appendToContainer(
     host: JMenuItem,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
     host: JMenuItem,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot remove $child from $host")
 
   override fun removeFromContainer(
     host: JMenuItem,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
     host: JMenuItem,
     child: Any,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot insert $child in $host before $beforeChild")
 
   override fun insertInContainer(
     host: JMenuItem,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot insert $host in container before $beforeChild")
 }

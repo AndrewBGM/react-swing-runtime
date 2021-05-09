@@ -8,12 +8,12 @@ import javax.swing.*
 class FrameHostAdapter : IHostAdapter<JFrame> {
   override fun create(
     props: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ): JFrame = JFrame().apply {
     defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
     addWindowListener(object : WindowAdapter() {
       override fun windowClosing(
-        e: WindowEvent
+        e: WindowEvent,
       ) {
         ctx.invokeCallback("onClose")
       }
@@ -25,7 +25,7 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
   override fun update(
     host: JFrame,
     changedProps: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = with(host) {
     title = changedProps.getOrDefault("title", title) as String?
   }
@@ -33,13 +33,13 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
   override fun setChildren(
     host: JFrame,
     children: List<Any>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = children.forEach { appendChild(host, it, ctx) }
 
   override fun appendChild(
     host: JFrame,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = when (child) {
     is JMenuBar -> host.jMenuBar = child
     is Container -> host.contentPane = child
@@ -48,7 +48,7 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
 
   override fun appendToContainer(
     host: JFrame,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     host.pack()
     host.setLocationRelativeTo(null)
@@ -60,7 +60,7 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
   override fun removeChild(
     host: JFrame,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = when (child) {
     is JMenuBar -> host.jMenuBar = null
     is Container -> host.contentPane = null
@@ -69,7 +69,7 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
 
   override fun removeFromContainer(
     host: JFrame,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     host.dispose()
   }
@@ -78,7 +78,7 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
     host: JFrame,
     child: Any,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = when (child) {
     is JMenuBar -> host.jMenuBar = child
     is Container -> host.contentPane = child
@@ -88,7 +88,7 @@ class FrameHostAdapter : IHostAdapter<JFrame> {
   override fun insertInContainer(
     host: JFrame,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     if (!host.isVisible) {
       appendToContainer(host, ctx)

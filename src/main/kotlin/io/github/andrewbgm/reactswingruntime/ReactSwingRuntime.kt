@@ -43,20 +43,20 @@ class ReactSwingRuntime {
 
   fun registerHostType(
     type: IHostType,
-    adapter: IHostAdapter<out Any>
+    adapter: IHostAdapter<out Any>,
   ): ReactSwingRuntime = this.apply {
     hostEnvironment.registerHostType(type, adapter)
   }
 
   inline fun <reified T : IMessage> registerMessageType(
     type: IMessageType,
-    handler: IMessageHandler<T>? = null
+    handler: IMessageHandler<T>? = null,
   ): ReactSwingRuntime = registerMessageType(type, T::class, handler)
 
   fun <T : IMessage> registerMessageType(
     type: IMessageType,
     clazz: KClass<T>,
-    handler: IMessageHandler<T>? = null
+    handler: IMessageHandler<T>? = null,
   ): ReactSwingRuntime = this.apply {
     messageSerializer.registerMessageType(type, clazz)
     handler?.let {
@@ -65,7 +65,7 @@ class ReactSwingRuntime {
   }
 
   fun start(
-    port: Int
+    port: Int,
   ): ReactSwingRuntime = this.apply {
     app.start(port)
   }
@@ -75,7 +75,7 @@ class ReactSwingRuntime {
   }
 
   private fun handleMessage(
-    ctx: WsMessageContext
+    ctx: WsMessageContext,
   ) {
     val message = ctx.message<IMessage>()
     messageBus.publish(message, MessageContext(ctx))
@@ -93,17 +93,17 @@ class ReactSwingRuntime {
     .create().also(::configureJsonMapping)
 
   private fun configureJsonMapping(
-    gson: Gson
+    gson: Gson,
   ) {
     JavalinJson.fromJsonMapper = object : FromJsonMapper {
       override fun <T> map(
         json: String,
-        targetClass: Class<T>
+        targetClass: Class<T>,
       ): T = gson.fromJson(json, targetClass)
     }
     JavalinJson.toJsonMapper = object : ToJsonMapper {
       override fun map(
-        obj: Any
+        obj: Any,
       ): String = if (obj is IMessage) gson.toJson(obj, IMessage::class.java) else gson.toJson(obj)
     }
   }

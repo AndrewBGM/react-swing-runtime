@@ -5,11 +5,11 @@ import io.github.andrewbgm.reactswingruntime.impl.*
 import io.github.andrewbgm.reactswingruntime.impl.message.messages.*
 
 class UpdateViewMessageHandler(
-  private val env: HostEnvironment
+  private val env: HostEnvironment,
 ) : IMessageHandler<UpdateViewMessage> {
   override fun handleMessage(
     message: UpdateViewMessage,
-    ctx: IMessageContext
+    ctx: IMessageContext,
   ) {
     val (id, changedProps) = message
     env.updateView(id, changedProps, HostContext(id, ctx))

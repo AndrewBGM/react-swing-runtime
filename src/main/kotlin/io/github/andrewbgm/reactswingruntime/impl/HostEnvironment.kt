@@ -15,7 +15,7 @@ class HostEnvironment {
     id: String,
     type: IHostType,
     props: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
     hostTypeById[id] = type
 
@@ -26,7 +26,7 @@ class HostEnvironment {
   fun updateView(
     id: String,
     changedProps: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
     val host = findHostView(id)
     val type = findHostType(id)
@@ -38,7 +38,7 @@ class HostEnvironment {
   fun setChildren(
     parentId: String,
     childrenIds: List<String>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
     childrenById[parentId] = childrenIds
 
@@ -56,7 +56,7 @@ class HostEnvironment {
   fun appendChild(
     parentId: String,
     childId: String,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
     val childHost = findHostView(childId)
 
@@ -80,7 +80,7 @@ class HostEnvironment {
   fun removeChild(
     parentId: String,
     childId: String,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
     val childHost = findHostView(childId)
 
@@ -107,7 +107,7 @@ class HostEnvironment {
     parentId: String,
     childId: String,
     beforeChildId: String,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
     val childHost = findHostView(childId)
     val beforeChildHost = findHostView(beforeChildId)
@@ -139,7 +139,7 @@ class HostEnvironment {
 
   fun registerHostType(
     type: IHostType,
-    adapter: IHostAdapter<out Any>
+    adapter: IHostAdapter<out Any>,
   ): HostEnvironment = this.apply {
     val typeName = type.name
     require(!adapterByTypeName.containsKey(typeName)) { "$type already has an associated IHostAdapter" }
@@ -148,7 +148,7 @@ class HostEnvironment {
   }
 
   private fun removeHostReferences(
-    id: String
+    id: String,
   ) {
     childrenById[id]?.forEach(::removeHostReferences)
     childrenById.remove(id)
@@ -158,17 +158,17 @@ class HostEnvironment {
 
   @Suppress("UNCHECKED_CAST")
   private fun findAdapter(
-    type: IHostType
+    type: IHostType,
   ): IHostAdapter<Any> {
     val typeName = type.name
     return requireNotNull(adapterByTypeName[typeName]) { "$type has no associated IHostAdapter" } as IHostAdapter<Any>
   }
 
   private fun findHostView(
-    id: String
+    id: String,
   ): Any = requireNotNull(hostById[id]) { "#$id has no associated view" }
 
   private fun findHostType(
-    id: String
+    id: String,
   ): IHostType = requireNotNull(hostTypeById[id]) { "#$id has no associated IHostType" }
 }

@@ -14,7 +14,7 @@ class MessageSerializer : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
 
   fun <T : IMessage> registerMessageType(
     type: IMessageType,
-    clazz: KClass<T>
+    clazz: KClass<T>,
   ): MessageSerializer = this.apply {
     val typeName = type.name
     clazzByTypeName[typeName] = clazz
@@ -24,7 +24,7 @@ class MessageSerializer : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
   override fun deserialize(
     json: JsonElement,
     typeOfT: Type,
-    ctx: JsonDeserializationContext
+    ctx: JsonDeserializationContext,
   ): IMessage? {
     if (!json.isJsonObject) {
       return null
@@ -41,7 +41,7 @@ class MessageSerializer : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
   override fun serialize(
     src: IMessage?,
     typeOfSrc: Type,
-    ctx: JsonSerializationContext
+    ctx: JsonSerializationContext,
   ): JsonElement {
     if (src == null) {
       return JsonNull.INSTANCE

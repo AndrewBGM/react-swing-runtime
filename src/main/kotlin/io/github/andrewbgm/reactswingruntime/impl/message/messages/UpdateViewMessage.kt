@@ -5,5 +5,5 @@ import io.github.andrewbgm.reactswingruntime.api.*
 
 data class UpdateViewMessage(
   @Expose val id: String,
-  @Expose val changedProps: Map<String, Any?>
+  @Expose val changedProps: Map<String, Any?>,
 ) : IMessage

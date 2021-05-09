@@ -8,7 +8,7 @@ class MessageBus {
 
   fun publish(
     message: IMessage,
-    ctx: IMessageContext
+    ctx: IMessageContext,
   ) {
     val handler = findHandler(message)
     handler.handleMessage(message, ctx)
@@ -16,7 +16,7 @@ class MessageBus {
 
   fun <T : IMessage> subscribe(
     clazz: KClass<T>,
-    handler: IMessageHandler<T>
+    handler: IMessageHandler<T>,
   ): MessageBus = this.apply {
     require(!handlerByClazz.containsKey(clazz)) { "$clazz already has an associated IMessageHandler" }
 
@@ -25,7 +25,7 @@ class MessageBus {
 
   @Suppress("UNCHECKED_CAST")
   private fun <T : IMessage> findHandler(
-    message: T
+    message: T,
   ): IMessageHandler<T> {
     val clazz = message::class
     val handler =

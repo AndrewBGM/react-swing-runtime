@@ -7,7 +7,7 @@ import javax.swing.*
 class MenuHostAdapter : IHostAdapter<JMenu> {
   override fun create(
     props: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ): JMenu = JMenu().apply {
     addActionListener {
       ctx.invokeCallback("onAction")
@@ -19,7 +19,7 @@ class MenuHostAdapter : IHostAdapter<JMenu> {
   override fun update(
     host: JMenu,
     changedProps: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = with(host) {
     text = changedProps.getOrDefault("text", text) as String?
   }
@@ -27,13 +27,13 @@ class MenuHostAdapter : IHostAdapter<JMenu> {
   override fun setChildren(
     host: JMenu,
     children: List<Any>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = children.forEach { appendChild(host, it, ctx) }
 
   override fun appendChild(
     host: JMenu,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     when (child) {
       is JMenuItem -> host.add(child)
@@ -43,13 +43,13 @@ class MenuHostAdapter : IHostAdapter<JMenu> {
 
   override fun appendToContainer(
     host: JMenu,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
     host: JMenu,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = when (child) {
     is JMenuItem -> host.remove(child)
     else -> error("Cannot remove $child from $host")
@@ -57,14 +57,14 @@ class MenuHostAdapter : IHostAdapter<JMenu> {
 
   override fun removeFromContainer(
     host: JMenu,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
     host: JMenu,
     child: Any,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     when {
       child is JMenuItem && beforeChild is JMenuItem -> host.insertBefore(child, beforeChild)
@@ -75,6 +75,6 @@ class MenuHostAdapter : IHostAdapter<JMenu> {
   override fun insertInContainer(
     host: JMenu,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot insert $host in container before $beforeChild")
 }

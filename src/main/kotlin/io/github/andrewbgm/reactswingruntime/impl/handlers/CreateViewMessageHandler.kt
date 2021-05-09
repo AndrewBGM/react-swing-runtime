@@ -5,11 +5,11 @@ import io.github.andrewbgm.reactswingruntime.impl.*
 import io.github.andrewbgm.reactswingruntime.impl.message.messages.*
 
 class CreateViewMessageHandler(
-  private val env: HostEnvironment
+  private val env: HostEnvironment,
 ) : IMessageHandler<CreateViewMessage> {
   override fun handleMessage(
     message: CreateViewMessage,
-    ctx: IMessageContext
+    ctx: IMessageContext,
   ) {
     val (id, type, props) = message
     env.createView(id, HostType.valueOf(type), props, HostContext(id, ctx))

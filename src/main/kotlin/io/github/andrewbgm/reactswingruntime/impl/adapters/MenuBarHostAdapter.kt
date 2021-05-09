@@ -7,7 +7,7 @@ import javax.swing.*
 class MenuBarHostAdapter : IHostAdapter<JMenuBar> {
   override fun create(
     props: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ): JMenuBar = JMenuBar().apply {
     update(this, props, ctx)
   }
@@ -15,7 +15,7 @@ class MenuBarHostAdapter : IHostAdapter<JMenuBar> {
   override fun update(
     host: JMenuBar,
     changedProps: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = with(host) {
     // noop
   }
@@ -23,13 +23,13 @@ class MenuBarHostAdapter : IHostAdapter<JMenuBar> {
   override fun setChildren(
     host: JMenuBar,
     children: List<Any>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = children.forEach { appendChild(host, it, ctx) }
 
   override fun appendChild(
     host: JMenuBar,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     when (child) {
       is JMenu -> host.add(child)
@@ -39,13 +39,13 @@ class MenuBarHostAdapter : IHostAdapter<JMenuBar> {
 
   override fun appendToContainer(
     host: JMenuBar,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
     host: JMenuBar,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = when (child) {
     is JMenu -> host.remove(child)
     else -> error("Cannot remove $child from $host")
@@ -53,14 +53,14 @@ class MenuBarHostAdapter : IHostAdapter<JMenuBar> {
 
   override fun removeFromContainer(
     host: JMenuBar,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
     host: JMenuBar,
     child: Any,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) {
     when {
       child is JMenu && beforeChild is JMenu -> host.insertBefore(child, beforeChild)
@@ -71,6 +71,6 @@ class MenuBarHostAdapter : IHostAdapter<JMenuBar> {
   override fun insertInContainer(
     host: JMenuBar,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot insert $host in container before $beforeChild")
 }

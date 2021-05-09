@@ -7,21 +7,21 @@ import javax.swing.event.*
 class TextFieldHostAdapter : IHostAdapter<JTextField> {
   override fun create(
     props: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ): JTextField = JTextField().apply {
     text = props.getOrDefault("initialValue", text) as String?
 
     document.addDocumentListener(object : DocumentListener {
       override fun insertUpdate(
-        e: DocumentEvent
+        e: DocumentEvent,
       ) = handleChange()
 
       override fun removeUpdate(
-        e: DocumentEvent
+        e: DocumentEvent,
       ) = handleChange()
 
       override fun changedUpdate(
-        e: DocumentEvent
+        e: DocumentEvent,
       ) = handleChange()
 
       private fun handleChange() {
@@ -35,7 +35,7 @@ class TextFieldHostAdapter : IHostAdapter<JTextField> {
   override fun update(
     host: JTextField,
     changedProps: Map<String, Any?>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = with(host) {
     // noop
   }
@@ -43,41 +43,41 @@ class TextFieldHostAdapter : IHostAdapter<JTextField> {
   override fun setChildren(
     host: JTextField,
     children: List<Any>,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot set children for $host")
 
   override fun appendChild(
     host: JTextField,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot append $child to $host")
 
   override fun appendToContainer(
     host: JTextField,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
     host: JTextField,
     child: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot remove $child from $host")
 
   override fun removeFromContainer(
     host: JTextField,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
     host: JTextField,
     child: Any,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot insert $child in $host before $beforeChild")
 
   override fun insertInContainer(
     host: JTextField,
     beforeChild: Any,
-    ctx: IHostContext
+    ctx: IHostContext,
   ) = error("Cannot insert $host in container before $beforeChild")
 }

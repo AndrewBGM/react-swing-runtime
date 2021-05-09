@@ -5,5 +5,5 @@ import io.github.andrewbgm.reactswingruntime.api.*
 
 data class AppendChildMessage(
   @Expose val parentId: String,
-  @Expose val childId: String
+  @Expose val childId: String,
 ) : IMessage
