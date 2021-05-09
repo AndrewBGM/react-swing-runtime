@@ -7,9 +7,7 @@ private const val ROOT_CONTAINER_ID = "00000000-0000-0000-0000-000000000000"
 
 class HostEnvironment {
   private val adapterByTypeName = mutableMapOf<String, IHostAdapter<out Any>>()
-  private val hostTypeById = mutableMapOf<String, IHostType>()
-  private val hostById = mutableMapOf<String, Any>()
-  private val childrenById = mutableMapOf<String, List<String>>()
+  private val viewById = mutableMapOf<String, HostView>()
 
   fun createView(
     id: String,
@@ -17,10 +15,8 @@ class HostEnvironment {
     props: Map<String, Any?>,
     ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
-    hostTypeById[id] = type
-
     val adapter = findAdapter(type)
-    hostById[id] = adapter.create(props, ctx)
+    viewById[id] = HostView(id, type, adapter.create(props, ctx))
   }
 
   fun updateView(
@@ -28,11 +24,10 @@ class HostEnvironment {
     changedProps: Map<String, Any?>,
     ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
-    val host = findHostView(id)
-    val type = findHostType(id)
+    val view = findView(id)
 
-    val adapter = findAdapter(type)
-    adapter.update(host, changedProps, ctx)
+    val adapter = findAdapter(view.type)
+    adapter.update(view.host, changedProps, ctx)
   }
 
   fun setChildren(
@@ -40,16 +35,13 @@ class HostEnvironment {
     childrenIds: List<String>,
     ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
-    childrenById[parentId] = childrenIds
-
     if (parentId != ROOT_CONTAINER_ID) {
-      val parentHost = findHostView(parentId)
-      val parentType = findHostType(parentId)
+      val parentView = findView(parentId)
+      val children = childrenIds.map(::findView)
+      parentView.setChildren(children)
 
-      val parentAdapter = findAdapter(parentType)
-      val children = childrenIds.map(::findHostView)
-
-      parentAdapter.setChildren(parentHost, children, ctx)
+      val parentAdapter = findAdapter(parentView.type)
+      parentAdapter.setChildren(parentView.host, children.map { it.host }, ctx)
     }
   }
 
@@ -58,22 +50,16 @@ class HostEnvironment {
     childId: String,
     ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
-    val childHost = findHostView(childId)
-
-    val children = childrenById.getOrPut(parentId) { listOf() }
-    childrenById[parentId] = children + childId
-
+    val childView = findView(childId)
     if (parentId == ROOT_CONTAINER_ID) {
-      val childType = findHostType(childId)
-
-      val childAdapter = findAdapter(childType)
-      childAdapter.appendToContainer(childHost, ctx)
+      val childAdapter = findAdapter(childView.type)
+      childAdapter.appendToContainer(childView.host, ctx)
     } else {
-      val parentHost = findHostView(parentId)
-      val parentType = findHostType(parentId)
+      val parentView = findView(parentId)
+      parentView += childView
 
-      val parentAdapter = findAdapter(parentType)
-      parentAdapter.appendChild(parentHost, childHost, ctx)
+      val parentAdapter = findAdapter(parentView.type)
+      parentAdapter.appendChild(parentView.host, childView.host, ctx)
     }
   }
 
@@ -82,25 +68,19 @@ class HostEnvironment {
     childId: String,
     ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
-    val childHost = findHostView(childId)
-
-    val children = childrenById.getOrPut(parentId) { listOf() }
-    childrenById[parentId] = children - childId
-
+    val childView = findView(childId)
     if (parentId == ROOT_CONTAINER_ID) {
-      val childType = findHostType(childId)
-
-      val childAdapter = findAdapter(childType)
-      childAdapter.removeFromContainer(childHost, ctx)
+      val childAdapter = findAdapter(childView.type)
+      childAdapter.removeFromContainer(childView.host, ctx)
     } else {
-      val parentHost = findHostView(parentId)
-      val parentType = findHostType(parentId)
+      val parentView = findView(parentId)
+      parentView -= childView
 
-      val parentAdapter = findAdapter(parentType)
-      parentAdapter.removeChild(parentHost, childHost, ctx)
+      val parentAdapter = findAdapter(parentView.type)
+      parentAdapter.removeChild(parentView.host, childView.host, ctx)
     }
 
-    removeHostReferences(childId)
+    removeHostReferences(childView)
   }
 
   fun insertChild(
@@ -109,31 +89,18 @@ class HostEnvironment {
     beforeChildId: String,
     ctx: IHostContext,
   ) = SwingUtilities.invokeLater {
-    val childHost = findHostView(childId)
-    val beforeChildHost = findHostView(beforeChildId)
-
-    val existingChildren = childrenById.getOrPut(parentId) { listOf() }
-      .toMutableList()
-
-    if (existingChildren.contains(childId)) {
-      existingChildren -= childId
-    }
-
-    val idx = existingChildren.indexOf(beforeChildId)
-    existingChildren.add(idx, childId)
-    childrenById[parentId] = existingChildren.toList()
+    val childView = findView(childId)
+    val beforeChildView = findView(beforeChildId)
 
     if (parentId == ROOT_CONTAINER_ID) {
-      val childType = findHostType(childId)
-
-      val childAdapter = findAdapter(childType)
-      childAdapter.insertInContainer(childHost, beforeChildHost, ctx)
+      val childAdapter = findAdapter(childView.type)
+      childAdapter.insertInContainer(childView.host, beforeChildView.host, ctx)
     } else {
-      val parentHost = findHostView(parentId)
-      val parentType = findHostType(parentId)
+      val parentView = findView(parentId)
+      parentView.insertChild(childView, beforeChildView)
 
-      val parentAdapter = findAdapter(parentType)
-      parentAdapter.insertChild(parentHost, childHost, beforeChildHost, ctx)
+      val parentAdapter = findAdapter(parentView.type)
+      parentAdapter.insertChild(parentView.host, childView.host, beforeChildView.host, ctx)
     }
   }
 
@@ -148,12 +115,10 @@ class HostEnvironment {
   }
 
   private fun removeHostReferences(
-    id: String,
+    view: HostView,
   ) {
-    childrenById[id]?.forEach(::removeHostReferences)
-    childrenById.remove(id)
-    hostById.remove(id)
-    hostTypeById.remove(id)
+    view.children.forEach(::removeHostReferences)
+    viewById.remove(view.id)
   }
 
   @Suppress("UNCHECKED_CAST")
@@ -164,11 +129,7 @@ class HostEnvironment {
     return requireNotNull(adapterByTypeName[typeName]) { "$type has no associated IHostAdapter" } as IHostAdapter<Any>
   }
 
-  private fun findHostView(
+  private fun findView(
     id: String,
-  ): Any = requireNotNull(hostById[id]) { "#$id has no associated view" }
-
-  private fun findHostType(
-    id: String,
-  ): IHostType = requireNotNull(hostTypeById[id]) { "#$id has no associated IHostType" }
+  ): HostView = requireNotNull(viewById[id]) { "#$id has no associated HostView" }
 }
