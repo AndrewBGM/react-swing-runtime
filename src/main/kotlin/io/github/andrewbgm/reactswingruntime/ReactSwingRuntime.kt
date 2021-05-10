@@ -23,12 +23,14 @@ class ReactSwingRuntime {
     configureGson()
 
     registerHostType(HostType.BUTTON, ButtonHostAdapter())
+    registerHostType(HostType.CHECK_BOX, CheckBoxHostAdapter())
     registerHostType(HostType.FRAME, FrameHostAdapter())
     registerHostType(HostType.LABEL, LabelHostAdapter())
     registerHostType(HostType.MENU, MenuHostAdapter())
     registerHostType(HostType.MENU_BAR, MenuBarHostAdapter())
     registerHostType(HostType.MENU_ITEM, MenuItemHostAdapter())
     registerHostType(HostType.PANEL, PanelHostAdapter())
+    registerHostType(HostType.RADIO_BUTTON, RadioButtonHostAdapter())
     registerHostType(HostType.TEXT_FIELD, TextFieldHostAdapter())
 
     registerMessageType(MessageType.CREATE_VIEW, CreateViewMessageHandler(hostEnvironment))

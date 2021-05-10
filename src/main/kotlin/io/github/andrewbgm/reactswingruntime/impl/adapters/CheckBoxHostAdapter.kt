@@ -1,76 +1,68 @@
 package io.github.andrewbgm.reactswingruntime.impl.adapters
 
 import io.github.andrewbgm.reactswingruntime.api.*
-import io.github.andrewbgm.reactswingruntime.impl.*
-import java.awt.*
+import java.awt.event.*
 import javax.swing.*
 
-class PanelHostAdapter : IHostAdapter<JPanel> {
+class CheckBoxHostAdapter : IHostAdapter<JCheckBox> {
   override fun create(
     props: Map<String, Any?>,
     ctx: IHostContext,
-  ): JPanel = JPanel().apply {
+  ): JCheckBox = JCheckBox().apply {
+    isSelected = props.getOrDefault("initialValue", false) as Boolean
+
+    addItemListener {
+      ctx.invokeCallback("onChange", listOf(it.stateChange == ItemEvent.SELECTED))
+    }
+
     update(this, props, ctx)
   }
 
   override fun update(
-    host: JPanel,
+    host: JCheckBox,
     changedProps: Map<String, Any?>,
     ctx: IHostContext,
   ) = with(host) {
-    // noop
+    text = changedProps.getOrDefault("children", text) as String?
   }
 
   override fun setChildren(
-    host: JPanel,
+    host: JCheckBox,
     children: List<Any>,
     ctx: IHostContext,
-  ) = children.forEach { appendChild(host, it, ctx) }
+  ) = error("Cannot set children for $host")
 
   override fun appendChild(
-    host: JPanel,
+    host: JCheckBox,
     child: Any,
     ctx: IHostContext,
-  ) {
-    when (child) {
-      is Container -> host.add(child)
-      else -> error("Cannot append $child to $host")
-    }
-  }
+  ) = error("Cannot append $child to $host")
 
   override fun appendToContainer(
-    host: JPanel,
+    host: JCheckBox,
     ctx: IHostContext,
   ) = error("Cannot append $host to container")
 
   override fun removeChild(
-    host: JPanel,
+    host: JCheckBox,
     child: Any,
     ctx: IHostContext,
-  ) = when (child) {
-    is Container -> host.remove(child)
-    else -> error("Cannot append $child to $host")
-  }
+  ) = error("Cannot remove $child from $host")
 
   override fun removeFromContainer(
-    host: JPanel,
+    host: JCheckBox,
     ctx: IHostContext,
   ) = error("Cannot remove $host from container")
 
   override fun insertChild(
-    host: JPanel,
+    host: JCheckBox,
     child: Any,
     beforeChild: Any,
     ctx: IHostContext,
-  ) {
-    when {
-      child is Container && beforeChild is Container -> host.insertBefore(child, beforeChild)
-      else -> error("Cannot insert $child in $host before $beforeChild")
-    }
-  }
+  ) = error("Cannot insert $child in $host before $beforeChild")
 
   override fun insertInContainer(
-    host: JPanel,
+    host: JCheckBox,
     beforeChild: Any,
     ctx: IHostContext,
   ) = error("Cannot insert $host in container before $beforeChild")
