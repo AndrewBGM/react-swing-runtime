@@ -12,6 +12,6 @@ class CreateViewMessageHandler(
     ctx: IMessageContext,
   ) {
     val (id, type, props) = message
-    env.createView(id, HostType.valueOf(type), props, HostContext(id, ctx))
+    env.createView(id, HostType.byId(type), props, HostContext(id, ctx))
   }
 }

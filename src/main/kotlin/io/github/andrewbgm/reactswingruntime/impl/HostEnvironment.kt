@@ -108,7 +108,7 @@ class HostEnvironment {
     type: IHostType,
     adapter: IHostAdapter<out Any>,
   ): HostEnvironment = this.apply {
-    val typeName = type.name
+    val typeName = type.id
     require(!adapterByTypeName.containsKey(typeName)) { "$type already has an associated IHostAdapter" }
 
     adapterByTypeName[typeName] = adapter
@@ -125,7 +125,7 @@ class HostEnvironment {
   private fun findAdapter(
     type: IHostType,
   ): IHostAdapter<Any> {
-    val typeName = type.name
+    val typeName = type.id
     return requireNotNull(adapterByTypeName[typeName]) { "$type has no associated IHostAdapter" } as IHostAdapter<Any>
   }
 

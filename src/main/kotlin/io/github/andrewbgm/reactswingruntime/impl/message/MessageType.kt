@@ -9,5 +9,8 @@ enum class MessageType : IMessageType {
   APPEND_CHILD,
   REMOVE_CHILD,
   INSERT_CHILD,
-  INVOKE_CALLBACK
+  INVOKE_CALLBACK;
+
+  override val id: String
+    get() = name
 }

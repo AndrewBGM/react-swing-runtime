@@ -16,7 +16,7 @@ class MessageSerializer : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
     type: IMessageType,
     clazz: KClass<T>,
   ): MessageSerializer = this.apply {
-    val typeName = type.name
+    val typeName = type.id
     clazzByTypeName[typeName] = clazz
     typeNameByClazz[clazz] = typeName
   }
