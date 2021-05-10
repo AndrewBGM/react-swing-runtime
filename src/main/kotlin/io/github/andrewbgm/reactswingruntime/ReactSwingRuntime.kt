@@ -31,6 +31,7 @@ class ReactSwingRuntime {
     registerHostType(HostType.MENU_ITEM, MenuItemHostAdapter())
     registerHostType(HostType.PANEL, PanelHostAdapter())
     registerHostType(HostType.RADIO_BUTTON, RadioButtonHostAdapter())
+    registerHostType(HostType.SCROLL_PANE, ScrollPaneHostAdapter())
     registerHostType(HostType.TEXT_FIELD, TextFieldHostAdapter())
 
     registerMessageType(MessageType.CREATE_VIEW, CreateViewMessageHandler(hostEnvironment))

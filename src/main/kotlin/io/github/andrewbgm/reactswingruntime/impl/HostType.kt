@@ -14,6 +14,7 @@ enum class HostType(
   MENU_ITEM("JMenuItem"),
   PANEL("JPanel"),
   RADIO_BUTTON("JRadioButton"),
+  SCROLL_PANE("JScrollPane"),
   TEXT_FIELD("JTextField");
 
   companion object {
