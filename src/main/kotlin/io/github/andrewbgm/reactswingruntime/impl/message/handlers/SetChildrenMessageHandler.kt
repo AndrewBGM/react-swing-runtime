@@ -1,17 +1,17 @@
-package io.github.andrewbgm.reactswingruntime.impl.handlers
+package io.github.andrewbgm.reactswingruntime.impl.message.handlers
 
 import io.github.andrewbgm.reactswingruntime.api.*
-import io.github.andrewbgm.reactswingruntime.impl.*
 import io.github.andrewbgm.reactswingruntime.impl.message.messages.*
+import io.github.andrewbgm.reactswingruntime.impl.view.*
 
 class SetChildrenMessageHandler(
-  private val env: HostEnvironment,
+  private val viewManager: ViewManager,
 ) : IMessageHandler<SetChildrenMessage> {
   override fun handleMessage(
     message: SetChildrenMessage,
     ctx: IMessageContext,
   ) {
     val (parentId, childrenIds) = message
-    env.setChildren(parentId, childrenIds, HostContext(parentId, ctx))
+    viewManager.setChildren(parentId, childrenIds, ctx)
   }
 }

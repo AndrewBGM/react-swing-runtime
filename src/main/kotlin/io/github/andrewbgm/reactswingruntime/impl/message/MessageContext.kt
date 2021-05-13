@@ -4,7 +4,7 @@ import io.github.andrewbgm.reactswingruntime.api.*
 import io.javalin.websocket.*
 
 class MessageContext(
-  private val ctx: WsMessageContext,
+  private val ctx: WsContext,
 ) : IMessageContext {
   override fun send(
     message: IMessage,

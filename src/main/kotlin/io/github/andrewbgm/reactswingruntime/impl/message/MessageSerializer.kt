@@ -8,15 +8,24 @@ import kotlin.reflect.*
 private const val TYPE_KEY = "type"
 private const val PAYLOAD_KEY = "payload"
 
+/**
+ * Message (de)serializer for Gson
+ */
 class MessageSerializer : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
   private val clazzByTypeName = mutableMapOf<String, KClass<out IMessage>>()
   private val typeNameByClazz = mutableMapOf<KClass<out IMessage>, String>()
 
+  /**
+   * Associated a message type with a message class.
+   */
   fun <T : IMessage> registerMessageType(
     type: IMessageType,
     clazz: KClass<T>,
   ): MessageSerializer = this.apply {
-    val typeName = type.id
+    val typeName = type.toString()
+    require(!clazzByTypeName.contains(typeName)) { "$type already has an associated IMessage" }
+    require(!typeNameByClazz.contains(clazz)) { "$clazz already has an associated IMessageType" }
+
     clazzByTypeName[typeName] = clazz
     typeNameByClazz[clazz] = typeName
   }

@@ -1,5 +1,8 @@
 package io.github.andrewbgm.reactswingruntime.api
 
-interface IMessageType {
-  val id: String
-}
+/**
+ * Message type.
+ *
+ * toString() is called on instances of IMessageType in order to (de)serialize from/to JSON.
+ */
+interface IMessageType

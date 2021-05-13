@@ -1,17 +1,17 @@
-package io.github.andrewbgm.reactswingruntime.impl.handlers
+package io.github.andrewbgm.reactswingruntime.impl.message.handlers
 
 import io.github.andrewbgm.reactswingruntime.api.*
-import io.github.andrewbgm.reactswingruntime.impl.*
 import io.github.andrewbgm.reactswingruntime.impl.message.messages.*
+import io.github.andrewbgm.reactswingruntime.impl.view.*
 
 class UpdateViewMessageHandler(
-  private val env: HostEnvironment,
+  private val viewManager: ViewManager,
 ) : IMessageHandler<UpdateViewMessage> {
   override fun handleMessage(
     message: UpdateViewMessage,
     ctx: IMessageContext,
   ) {
     val (id, changedProps) = message
-    env.updateView(id, changedProps, HostContext(id, ctx))
+    viewManager.updateView(id, changedProps, ctx)
   }
 }

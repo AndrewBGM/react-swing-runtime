@@ -11,6 +11,5 @@ enum class MessageType : IMessageType {
   INSERT_CHILD,
   INVOKE_CALLBACK;
 
-  override val id: String
-    get() = name
+  override fun toString(): String = name
 }

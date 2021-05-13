@@ -6,5 +6,5 @@ import io.github.andrewbgm.reactswingruntime.api.*
 data class InvokeCallbackMessage(
   @Expose val id: String,
   @Expose val name: String,
-  @Expose val args: List<Any?>,
+  @Expose val args: List<Any?>? = null,
 ) : IMessage

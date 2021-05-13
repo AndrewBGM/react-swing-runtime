@@ -5,6 +5,6 @@ import io.github.andrewbgm.reactswingruntime.api.*
 
 data class CreateViewMessage(
   @Expose val id: String,
-  @Expose val type: String,
+  @Expose val type: IRemoteComponentType,
   @Expose val props: Map<String, Any?>,
 ) : IMessage
