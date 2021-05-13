@@ -7,7 +7,12 @@ enum class RemoteComponentType : IRemoteComponentType {
   JBUTTON,
   JFRAME,
   JLABEL,
-  JPANEL;
+  JMENU,
+  JMENU_BAR,
+  JMENU_ITEM,
+  JPANEL,
+  JSCROLL_PANE,
+  JSPLIT_PANE;
 
   override fun toString() = name
 }

@@ -55,7 +55,12 @@ class ReactSwingRuntime {
     registerRemoteComponent(RemoteComponentType.JBUTTON, JButtonRemoteComponentAdapter())
     registerRemoteComponent(RemoteComponentType.JFRAME, JFrameRemoteComponentAdapter())
     registerRemoteComponent(RemoteComponentType.JLABEL, JLabelRemoteComponentAdapter())
+    registerRemoteComponent(RemoteComponentType.JMENU, JMenuRemoteComponentAdapter())
+    registerRemoteComponent(RemoteComponentType.JMENU_BAR, JMenuBarRemoteComponentAdapter())
+    registerRemoteComponent(RemoteComponentType.JMENU_ITEM, JMenuItemRemoteComponentAdapter())
     registerRemoteComponent(RemoteComponentType.JPANEL, JPanelRemoteComponentAdapter())
+    registerRemoteComponent(RemoteComponentType.JSCROLL_PANE, JScrollPaneRemoteComponentAdapter())
+    registerRemoteComponent(RemoteComponentType.JSPLIT_PANE, JSplitPaneRemoteComponentAdapter())
 
     registerMessage<InvokeCallbackMessage>(MessageType.INVOKE_CALLBACK)
   }
@@ -129,7 +134,7 @@ class ReactSwingRuntime {
     ctx: WsMessageContext,
   ) {
     val message = ctx.message<IMessage>()
-    println(message)
+//    println(message)
     messageBus.publish(message, MessageContext(ctx))
   }
 
