@@ -16,7 +16,7 @@ class MessageSerializer : JsonDeserializer<IMessage>, JsonSerializer<IMessage> {
   private val typeNameByClazz = mutableMapOf<KClass<out IMessage>, String>()
 
   /**
-   * Associated a message type with a message class.
+   * Associates a message type with a message class.
    */
   fun <T : IMessage> registerMessageType(
     type: IMessageType,

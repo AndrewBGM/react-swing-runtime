@@ -4,10 +4,16 @@ import com.google.gson.*
 import io.github.andrewbgm.reactswingruntime.api.*
 import java.lang.reflect.*
 
+/**
+ * Message (de)serializer for Gson
+ */
 class RemoteComponentTypeSerializer : JsonDeserializer<IRemoteComponentType>,
   JsonSerializer<IRemoteComponentType> {
   private val typeByTypeName = mutableMapOf<String, IRemoteComponentType>()
 
+  /**
+   * Registers a component type so that it can be (de)serialized.
+   */
   fun registerComponentType(
     type: IRemoteComponentType,
   ): RemoteComponentTypeSerializer = this.apply {

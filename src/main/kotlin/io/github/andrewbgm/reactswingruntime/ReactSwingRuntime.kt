@@ -134,7 +134,6 @@ class ReactSwingRuntime {
     ctx: WsMessageContext,
   ) {
     val message = ctx.message<IMessage>()
-//    println(message)
     messageBus.publish(message, MessageContext(ctx))
   }
 
